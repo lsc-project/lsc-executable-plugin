@@ -45,28 +45,33 @@
  */
 package org.lsc.plugins.connectors.executable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.naming.NamingException;
+import javax.naming.CommunicationException;
 
-import org.lsc.LscAttributes;
-import org.lsc.beans.IBean;
+import org.lsc.IWritableService;
+import org.lsc.LscModifications;
 import org.lsc.exception.LscServiceConfigurationException;
-import org.lsc.exception.LscServiceException;
-import org.lsc.jndi.SimpleJndiDstService;
+import org.lsc.jndi.JndiModificationType;
+import org.lsc.jndi.JndiModifications;
+import org.lsc.utils.output.LdifLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is a generic but configurable implementation to provision data to
- * any referential which can be scripted. This is based on ExecutableLdifService
- * for updating executables and SimpleJndiDstService to look for data 
+ * any referential which can be scripted
  * 
- * It just requires 4 scripts to :
+ * It just requires 6 scripts to :
  * <ul>
- *   <li>add a new</li>  
- *   <li>update a existing data</li>  
- *   <li>rename - or change the identifier</li>  
- *   <li>delete or archive an unused data</li>  
+ * <li>list data</li>
+ * <li>get a piece of data</li>
+ * <li>add a new</li>  
+ * <li>update a existing data</li>  
+ * <li>rename - or change the identifier</li>  
+ * <li>delete or archive an unused data</li>  
  * </ul>
  * 
  * The 4 scripts which change data are responsible for consistency. No explicit 
@@ -78,42 +83,42 @@ import org.lsc.jndi.SimpleJndiDstService;
  * 
  * @author Sebastien Bahloul &lt;seb@lsc-project.org&gt;
  */
-public class JndiExecutableLdifService extends ExecutableLdifWritableService {
+public class ExecutableLdifWritableService extends ExecutableLdifSourceService implements IWritableService {
 
-	/** The destination JNDI service to use */
-	private SimpleJndiDstService sjds;
-	
-	public JndiExecutableLdifService(Properties props, String beanClassName) throws LscServiceConfigurationException {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExecutableLdifWritableService.class);
+
+	/** Map a JndiModificationType to the associated Script **/
+	private Map<JndiModificationType, String> modificationToScript = new HashMap<JndiModificationType, String>();
+
+	public ExecutableLdifWritableService(Properties props, String beanClassName) throws LscServiceConfigurationException {
 		super(props, beanClassName);
-		sjds = new SimpleJndiDstService(props, beanClassName);
+		modificationToScript.put(JndiModificationType.ADD_ENTRY, (String) props.get("addScript"));
+		modificationToScript.put(JndiModificationType.DELETE_ENTRY, (String) props.get("deleteScript"));
+		modificationToScript.put(JndiModificationType.MODIFY_ENTRY, (String) props.get("updateScript"));
+		modificationToScript.put(JndiModificationType.MODRDN_ENTRY, (String) props.get("renameScript"));
 	}
 
+	
 	/**
-	 * The simple object getter according to its identifier.
-	 * 
-	 * @param pivotName Name of the entry to be returned, which is the name returned by {@link #getListPivots()}
-	 *            (used for display only)
-	 * @param pivotAttributes Map of attribute names and values, which is the data identifier in the
-	 *            source such as returned by {@link #getListPivots()}. It must identify a unique entry in the
-	 *            source.
-	 * @param fromSameService are the pivot attributes provided by the same service
-	 * @return The bean, or null if not found
-	 * @throws LscServiceException May throw a {@link NamingException} if the object is not found in the
-	 *             directory, or if more than one object would be returned.
+	 * Apply directory modifications.
+	 *
+	 * @param lm Modifications to apply in a {@link JndiModifications} object.
+	 * @return Operation status
+	 * @throws CommunicationException If the connection to the service is lost,
+	 * and all other attempts to use this service should fail.
 	 */
-	public IBean getBean(String pivotName, LscAttributes pivotAttributes, boolean fromSameService) throws LscServiceException {
-		return sjds.getBean(pivotName, pivotAttributes, fromSameService);
-	}
-
-    /**
-     * Returns a list of all the objects' identifiers.
-     * 
-	 * @return Map of all entries names that are returned by the directory with an associated map of
-	 *         attribute names and values (never null)
-     * @throws LscServiceException 
-     * @throws NamingException 
-     */
-	public Map<String, LscAttributes> getListPivots() throws LscServiceException {
-		return sjds.getListPivots();
+	public boolean apply(final LscModifications lm) {
+		int exitCode = 0;
+		JndiModifications jm = new JndiModifications(JndiModificationType.getFromLscModificationType(lm.getOperation()), lm.getTaskName());
+		jm.setDistinguishName(lm.getMainIdentifier());
+		jm.setNewDistinguishName(lm.getNewMainIdentifier());
+		jm.setModificationItems(JndiModifications.fromLscAttributeModifications(lm.getLscAttributeModifications()));
+		String ldif = LdifLayout.format(jm);
+		exitCode = execute(getParameters(modificationToScript.get(jm.getOperation()), 
+						jm.getDistinguishName()), getEnv(), ldif);
+		if (exitCode != 0) {
+			LOGGER.error("Exit code != 0: {}", exitCode);
+		}
+		return exitCode == 0;
 	}
 }
