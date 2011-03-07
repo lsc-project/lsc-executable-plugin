@@ -84,7 +84,11 @@ public class ExecutableLdifSourceServiceConnectionConfiguration extends Connecti
 	}
 
 	@Override
-	public Class<?> getService() {
-		return ExecutableLdifSourceService.class;
+	public Class<?> getService(boolean isSource) {
+		if(isSource) {
+			return ExecutableLdifSourceService.class;
+		} else {
+			return null;
+		}
 	}
 }
