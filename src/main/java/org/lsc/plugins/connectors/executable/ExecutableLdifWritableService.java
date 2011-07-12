@@ -53,6 +53,7 @@ import javax.naming.CommunicationException;
 
 import org.lsc.IWritableService;
 import org.lsc.LscModifications;
+import org.lsc.configuration.objects.Task;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.jndi.JndiModificationType;
 import org.lsc.jndi.JndiModifications;
@@ -90,12 +91,17 @@ public class ExecutableLdifWritableService extends ExecutableLdifSourceService i
 	/** Map a JndiModificationType to the associated Script **/
 	private Map<JndiModificationType, String> modificationToScript = new HashMap<JndiModificationType, String>();
 
+	@Deprecated
 	public ExecutableLdifWritableService(Properties props, String beanClassName) throws LscServiceConfigurationException {
 		super(props, beanClassName);
 		modificationToScript.put(JndiModificationType.ADD_ENTRY, (String) props.get("addScript"));
 		modificationToScript.put(JndiModificationType.DELETE_ENTRY, (String) props.get("deleteScript"));
 		modificationToScript.put(JndiModificationType.MODIFY_ENTRY, (String) props.get("updateScript"));
 		modificationToScript.put(JndiModificationType.MODRDN_ENTRY, (String) props.get("renameScript"));
+	}
+
+	public ExecutableLdifWritableService(Task task) throws LscServiceConfigurationException {
+		super(task);
 	}
 
 	

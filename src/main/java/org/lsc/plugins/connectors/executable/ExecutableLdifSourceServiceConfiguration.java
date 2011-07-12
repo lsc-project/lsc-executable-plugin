@@ -56,6 +56,9 @@ import org.lsc.configuration.objects.Service;
  */
 public class ExecutableLdifSourceServiceConfiguration extends Service {
 
+	private String listScript;
+	private String getScript;
+	
 	/** Will contain any instance variables that is required to launch the script */
 	private Map<String, String> vars;
 	
@@ -75,4 +78,21 @@ public class ExecutableLdifSourceServiceConfiguration extends Service {
 	public Class<?> getImplementation() {
 		return ExecutableLdifSourceService.class;
 	}
+
+	public String getListScript() {
+		return listScript;
+	}
+
+	public void setListScript(String listScript) {
+		this.listScript = listScript;
+	}
+
+	public String getGetScript() {
+		return getScript;
+	}
+
+	public void setGetScript(String getScript) {
+		this.getScript = getScript;
+	}
+	
 }

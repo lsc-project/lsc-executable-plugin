@@ -61,6 +61,7 @@ import javax.naming.directory.BasicAttribute;
 import org.apache.commons.codec.binary.Base64;
 import org.lsc.LscAttributes;
 import org.lsc.beans.IBean;
+import org.lsc.configuration.objects.Task;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.exception.LscServiceException;
 import org.lsc.service.IService;
@@ -97,6 +98,7 @@ public class ExecutableLdifSourceService implements IService {
 	private Properties globalEnvironmentVariables;
 
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	public ExecutableLdifSourceService(Properties props, String beanClassName) throws LscServiceConfigurationException {
 		rt = Runtime.getRuntime();
 		try {
@@ -110,6 +112,21 @@ public class ExecutableLdifSourceService implements IService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public ExecutableLdifSourceService(Task task) throws LscServiceConfigurationException {
+		rt = Runtime.getRuntime();
+		try {
+			ExecutableLdifSourceServiceConfiguration elssc = (ExecutableLdifSourceServiceConfiguration)task.getSourceService();
+
+			listScript = elssc.getListScript();
+			getScript = elssc.getGetScript();
+			globalEnvironmentVariables.putAll(elssc.getVars());
+			
+			beanClass = (Class<IBean>) Class.forName(task.getBean());
+		} catch (ClassNotFoundException e) {
+			throw new LscServiceConfigurationException(e);
+		}
+	}
 	
 	/**
 	 * The simple object getter according to its identifier.
