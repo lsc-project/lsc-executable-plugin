@@ -52,6 +52,7 @@ import javax.naming.NamingException;
 
 import org.lsc.LscAttributes;
 import org.lsc.beans.IBean;
+import org.lsc.configuration.objects.Task;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.exception.LscServiceException;
 import org.lsc.jndi.SimpleJndiDstService;
@@ -83,9 +84,15 @@ public class JndiExecutableLdifService extends ExecutableLdifWritableService {
 	/** The destination JNDI service to use */
 	private SimpleJndiDstService sjds;
 	
+	@Deprecated
 	public JndiExecutableLdifService(Properties props, String beanClassName) throws LscServiceConfigurationException {
 		super(props, beanClassName);
 		sjds = new SimpleJndiDstService(props, beanClassName);
+	}
+
+	public JndiExecutableLdifService(Task task) throws LscServiceConfigurationException {
+		super(task);
+		sjds = new SimpleJndiDstService(task);
 	}
 
 	/**
