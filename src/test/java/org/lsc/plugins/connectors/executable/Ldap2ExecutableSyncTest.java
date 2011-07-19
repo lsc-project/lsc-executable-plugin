@@ -60,7 +60,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
-import org.lsc.Configuration;
 import org.lsc.LscAttributes;
 import org.lsc.SimpleSynchronize;
 import org.lsc.beans.IBean;
@@ -126,7 +125,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		attributeValues.put("sn", "SN0001");
 		ids.put(DN_MODIFY_SRC, new LscAttributes(attributeValues));
 
-		IService srcService = new SimpleJndiSrcService(Configuration.getAsProperties("lsc.tasks." + TASK_NAME + ".srcService"), "org.lsc.beans.SimpleBean");
+		IService srcService = new SimpleJndiSrcService(LscConfiguration.getTask(TASK_NAME));
 		Entry<String, LscAttributes> obj = ids.entrySet().iterator().next();
 		IBean srcBean = srcService.getBean(obj.getKey(), obj.getValue(), true);
 		String userPassword = srcBean.getAttributeFirstValueById("userPassword");
