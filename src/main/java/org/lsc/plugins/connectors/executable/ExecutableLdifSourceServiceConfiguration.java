@@ -45,9 +45,12 @@
  */
 package org.lsc.plugins.connectors.executable;
 
+import java.io.File;
 import java.util.Map;
 
 import org.lsc.configuration.objects.Service;
+import org.lsc.exception.LscServiceCommunicationException;
+import org.lsc.exception.LscServiceConfigurationException;
 
 /**
  * This class references the settings required to use a source service that
@@ -95,4 +98,16 @@ public class ExecutableLdifSourceServiceConfiguration extends Service {
 		this.getScript = getScript;
 	}
 	
+	@Override
+	public void validate() throws LscServiceConfigurationException,
+			LscServiceCommunicationException {
+
+		File getScriptFile = new File(getScript);
+		File listScriptFile = new File(listScript);
+		if(getScriptFile == null || ! getScriptFile.canExecute()) {
+			new LscServiceConfigurationException("Unable to find or execute get script " + getScript);
+		} else if (listScriptFile == null || !listScriptFile.canExecute()) {
+			new LscServiceConfigurationException("Unable to find or execute list script " + listScript);
+		}
+	}
 }
