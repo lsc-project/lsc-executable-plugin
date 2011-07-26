@@ -50,6 +50,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -401,7 +402,7 @@ public class ExecutableLdifSourceService implements IService {
 		StringBuilder sb = new StringBuilder();
 		for (String attributeName : attributes.getAttributes().keySet()) {
 			try {
-				LdifLayout.printAttributeToStringBuffer(sb, new BasicAttribute(attributeName, attributes.getAttributes().get(attributeName)));
+				LdifLayout.printAttributeToStringBuffer(sb, attributeName, (List<Object>) attributes.getListValueAttribute(attributeName));
 			} catch (NamingException e) {
 				throw new LscServiceException("Error while converting LscAttributes to LDIF: " + e.toString(), e);
 			}

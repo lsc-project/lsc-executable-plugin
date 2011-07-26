@@ -115,11 +115,11 @@ public class ExecutableLdifWritableService extends ExecutableLdifSourceService i
 	 */
 	public boolean apply(final LscModifications lm) {
 		int exitCode = 0;
+		String ldif = LdifLayout.format(lm);
 		JndiModifications jm = new JndiModifications(JndiModificationType.getFromLscModificationType(lm.getOperation()), lm.getTaskName());
 		jm.setDistinguishName(lm.getMainIdentifier());
 		jm.setNewDistinguishName(lm.getNewMainIdentifier());
 		jm.setModificationItems(JndiModifications.fromLscAttributeModifications(lm.getLscAttributeModifications()));
-		String ldif = LdifLayout.format(jm);
 		exitCode = execute(getParameters(modificationToScript.get(jm.getOperation()), 
 						jm.getDistinguishName()), getEnv(), ldif);
 		if (exitCode != 0) {
