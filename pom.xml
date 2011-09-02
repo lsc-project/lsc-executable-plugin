@@ -37,9 +37,9 @@
     </licenses>
     
     <scm>
-        <connection>scm:svn:https://lsc-project.org/svn/lsc/trunk</connection>
-        <developerConnection>scm:svn:svn+ssh://login@lsc-project.org/var/lib/svn/lsc-core/trunk</developerConnection>
-        <url>http://tools.lsc-project.org/repositories/browse/lsc/lsc</url>
+        <connection>scm:svn:https://lsc-project.org/svn/plugins/trunk/connectors/executable</connection>
+        <developerConnection>scm:svn:svn+ssh://login@lsc-project.org/var/lib/svn/plugins/trunk/connectors/executable</developerConnection>
+        <url>http://tools.lsc-project.org/repositories/browse/lsc/plugins/trunk/connectors/executable</url>
     </scm>
     
     <build>
