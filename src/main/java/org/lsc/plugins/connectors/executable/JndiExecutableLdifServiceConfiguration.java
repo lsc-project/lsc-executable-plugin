@@ -49,14 +49,11 @@ import java.util.Map;
 
 import org.lsc.configuration.objects.services.DstLdap;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
  * This class references the settings required to use a writable service that
  * read and write LDIF data through scripts
  * @author Sebastien Bahloul &lt;seb@lsc-project.org&gt;
  */
-@XStreamAlias("jndiExecDstService")
 public class JndiExecutableLdifServiceConfiguration 
 	extends DstLdap {
 
