@@ -58,7 +58,6 @@ import javax.naming.directory.SearchResult;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
 import org.lsc.LscAttributes;
 import org.lsc.SimpleSynchronize;
@@ -66,6 +65,7 @@ import org.lsc.beans.IBean;
 import org.lsc.configuration.PropertiesConfigurationHelper;
 import org.lsc.configuration.objects.LscConfiguration;
 import org.lsc.configuration.objects.connection.directory.Ldap;
+import org.lsc.exception.LscConfigurationException;
 import org.lsc.exception.LscServiceException;
 import org.lsc.jndi.JndiServices;
 import org.lsc.jndi.SimpleJndiSrcService;
@@ -105,7 +105,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		dstJndiServices = JndiServices.getInstance((Ldap)LscConfiguration.getConnection("dst-ldap"));
 	}
 	
-	public void setUp() throws ConfigurationException {
+	public void setUp() throws LscConfigurationException {
 		PropertiesConfigurationHelper.loadConfigurationFrom(this.getClass().getClassLoader().getResource("lsc.properties").getPath());
 	}
 	
