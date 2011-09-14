@@ -101,7 +101,7 @@ public class ExecutableLdifWritableService extends ExecutableLdifSourceService i
 	}
 
 	public ExecutableLdifWritableService(Task task) throws LscServiceConfigurationException {
-		super(task);
+		super((ExecutableLdifSourceServiceConfiguration)task.getDestinationService(), task.getBean());
 	}
 
 	

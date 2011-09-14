@@ -113,17 +113,21 @@ public class ExecutableLdifSourceService implements IService {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public ExecutableLdifSourceService(Task task) throws LscServiceConfigurationException {
-		rt = Runtime.getRuntime();
-		try {
-			ExecutableLdifSourceServiceConfiguration elssc = (ExecutableLdifSourceServiceConfiguration)task.getSourceService();
+		this((ExecutableLdifSourceServiceConfiguration)task.getSourceService(), task.getBean());
+	}
 
-			listScript = elssc.getListScript();
-			getScript = elssc.getGetScript();
-			globalEnvironmentVariables.putAll(elssc.getVars());
-			
-			beanClass = (Class<IBean>) Class.forName(task.getBean());
+	@SuppressWarnings("unchecked")
+	public ExecutableLdifSourceService(ExecutableLdifSourceServiceConfiguration elsc, String beanClassName) throws LscServiceConfigurationException {
+		rt = Runtime.getRuntime();
+		ExecutableLdifSourceServiceConnectionConfiguration elssc = (ExecutableLdifSourceServiceConnectionConfiguration)elsc.getConnection();
+
+		listScript = elssc.getListScript();
+		getScript = elssc.getGetScript();
+		globalEnvironmentVariables = new Properties();
+		globalEnvironmentVariables.putAll(elsc.getVars());
+		try {
+			beanClass = (Class<IBean>) Class.forName(beanClassName);
 		} catch (ClassNotFoundException e) {
 			throw new LscServiceConfigurationException(e);
 		}

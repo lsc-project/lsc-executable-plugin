@@ -46,6 +46,7 @@
 package org.lsc.plugins.connectors.executable;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.lsc.configuration.objects.Service;
@@ -53,19 +54,22 @@ import org.lsc.exception.LscServiceCommunicationException;
 import org.lsc.exception.LscServiceConfigurationException;
 
 /**
- * This class references the settings required to use a source service that
- * read LDIF data through scripts
+ * This class references the settings required to use a source service that read
+ * LDIF data through scripts
+ * 
  * @author Sebastien Bahloul &lt;seb@lsc-project.org&gt;
  */
 public class ExecutableLdifSourceServiceConfiguration extends Service {
 
-	private String listScript;
-	private String getScript;
-	
-	/** Will contain any instance variables that is required to launch the script */
+	/**
+	 * Will contain any instance variables that is required to launch the script
+	 */
 	private Map<String, String> vars;
-	
+
 	public Map<String, String> getVars() {
+		if(vars == null) {
+			vars = new HashMap<String, String>();
+		}
 		return vars;
 	}
 
@@ -82,32 +86,18 @@ public class ExecutableLdifSourceServiceConfiguration extends Service {
 		return ExecutableLdifSourceService.class;
 	}
 
-	public String getListScript() {
-		return listScript;
-	}
-
-	public void setListScript(String listScript) {
-		this.listScript = listScript;
-	}
-
-	public String getGetScript() {
-		return getScript;
-	}
-
-	public void setGetScript(String getScript) {
-		this.getScript = getScript;
-	}
-	
-	@Override
 	public void validate() throws LscServiceConfigurationException,
 			LscServiceCommunicationException {
 
-		File getScriptFile = new File(getScript);
-		File listScriptFile = new File(listScript);
-		if(getScriptFile == null || ! getScriptFile.canExecute()) {
-			new LscServiceConfigurationException("Unable to find or execute get script " + getScript);
+		ExecutableLdifSourceServiceConnectionConfiguration conf = (ExecutableLdifSourceServiceConnectionConfiguration)getConnection();
+		File getScriptFile = new File(conf.getGetScript());
+		File listScriptFile = new File(conf.getListScript());
+		if (getScriptFile == null || !getScriptFile.canExecute()) {
+			new LscServiceConfigurationException(
+					"Unable to find or execute get script " + conf.getGetScript());
 		} else if (listScriptFile == null || !listScriptFile.canExecute()) {
-			new LscServiceConfigurationException("Unable to find or execute list script " + listScript);
+			new LscServiceConfigurationException(
+					"Unable to find or execute list script " + conf.getListScript());
 		}
 	}
 }
