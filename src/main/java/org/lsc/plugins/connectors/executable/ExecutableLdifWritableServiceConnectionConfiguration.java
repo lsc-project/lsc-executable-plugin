@@ -47,13 +47,16 @@ package org.lsc.plugins.connectors.executable;
 
 import org.apache.tapestry5.beaneditor.Validate;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 /**
  * This class references the settings required to use a source service that
  * read and write LDIF data through scripts
  * @author Sebastien Bahloul &lt;seb@lsc-project.org&gt;
  */
+@XStreamAlias("jndiExecDstConnection")
 public class ExecutableLdifWritableServiceConnectionConfiguration 
-	extends ExecutableLdifSourceServiceConfiguration {
+	extends ExecutableLdifSourceServiceConnectionConfiguration {
 
 	/** Must be the path to the script to add object */
 	@Validate("required")
@@ -104,7 +107,11 @@ public class ExecutableLdifWritableServiceConnectionConfiguration
 	}
 
 	@Override
-	public Class<?> getImplementation() {
-		return ExecutableLdifWritableServiceConfiguration.class;
+	public Class<?> getService(boolean isSource) {
+		if(isSource) {
+			return ExecutableLdifWritableService.class;
+		} else {
+			return null;
+		}
 	}
 }
