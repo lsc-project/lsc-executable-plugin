@@ -45,7 +45,7 @@
     <build>
         <defaultGoal>package</defaultGoal>
         
-        <finalName>${project.artifactId}-${project.version}</finalName>
+        <finalName>lsc-executable-plugin-${project.version}</finalName>
         
         <plugins>
 			<plugin>
