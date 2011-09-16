@@ -60,7 +60,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.BasicAttribute;
 
 import org.apache.commons.codec.binary.Base64;
-import org.lsc.LscAttributes;
+import org.lsc.LscDatasets;
 import org.lsc.beans.IBean;
 import org.lsc.configuration.objects.Task;
 import org.lsc.exception.LscServiceConfigurationException;
@@ -144,7 +144,7 @@ public class ExecutableLdifSourceService implements IService {
 	 * @return The bean, or null if not found
 	 * @throws LscServiceException May throw a {@link LscServiceException} if there is any error with LDIF conversion
 	 */
-	public IBean getBean(String pivotName, LscAttributes pivotAttributes, boolean fromSameService) throws LscServiceException {
+	public IBean getBean(String pivotName, LscDatasets pivotAttributes, boolean fromSameService) throws LscServiceException {
 		String output = executeWithReturn(getParameters(getScript, pivotName), getEnv(), toLdif(pivotAttributes));
 		Collection<IBean> entries = fromLdif(output);
 		if (entries.size() != 1) {
@@ -161,19 +161,19 @@ public class ExecutableLdifSourceService implements IService {
 	 *         attribute names and values (never null)
 	 * @throws LscServiceException 
 	 */
-	public Map<String, LscAttributes> getListPivots() throws LscServiceException  {
+	public Map<String, LscDatasets> getListPivots() throws LscServiceException  {
 		try {
-			Map<String, LscAttributes> map = null;
+			Map<String, LscDatasets> map = null;
 			String output = executeWithReturn(getParameters(listScript), getEnv(), "");
 			Collection<IBean> beans = fromLdif(output);
 			if (beans != null) {
-				map = new HashMap<String, LscAttributes>();
+				map = new HashMap<String, LscDatasets>();
 				for (IBean bean : beans) {
-					LscAttributes attributes = new LscAttributes();
+					LscDatasets attributes = new LscDatasets();
 					for (String id : bean.getAttributesNames()) {
 						Attribute attribute = bean.getAttributeById(id);
 						//TODO: handle multi value attributes pivot
-						attributes.getAttributes().put(id, attribute.get());
+						attributes.getDatasets().put(id, attribute.get());
 					}
 					map.put(bean.getDistinguishedName(), attributes);
 				}
@@ -387,7 +387,7 @@ public class ExecutableLdifSourceService implements IService {
 	private void updateBeanAttributeValue(IBean bean,
 					String attributeName, String attributeValue) {
 		if (attributeName.equals("dn")) {
-			bean.setDistinguishedName(attributeValue);
+			bean.setDistinguishName(attributeValue);
 		} else {
 			if (bean.getAttributeById(attributeName) != null) {
 				Attribute attr = bean.getAttributeById(attributeName);
@@ -397,14 +397,14 @@ public class ExecutableLdifSourceService implements IService {
 				bean.setAttribute(new BasicAttribute(attributeName, attributeValue));
 			}
 			if (bean.getDistinguishedName() == null) {
-				bean.setDistinguishedName(attributeValue);
+				bean.setDistinguishName(attributeValue);
 			}
 		}
 	}
 
-	private String toLdif(LscAttributes attributes) throws LscServiceException {
+	private String toLdif(LscDatasets attributes) throws LscServiceException {
 		StringBuilder sb = new StringBuilder();
-		for (String attributeName : attributes.getAttributes().keySet()) {
+		for (String attributeName : attributes.getDatasets().keySet()) {
 			try {
 				LdifLayout.printAttributeToStringBuffer(sb, attributeName, (List<Object>) attributes.getListValueAttribute(attributeName));
 			} catch (NamingException e) {

@@ -50,7 +50,7 @@ import java.util.Properties;
 
 import javax.naming.NamingException;
 
-import org.lsc.LscAttributes;
+import org.lsc.LscDatasets;
 import org.lsc.beans.IBean;
 import org.lsc.configuration.objects.Task;
 import org.lsc.exception.LscServiceConfigurationException;
@@ -108,7 +108,7 @@ public class JndiExecutableLdifService extends ExecutableLdifWritableService {
 	 * @throws LscServiceException May throw a {@link NamingException} if the object is not found in the
 	 *             directory, or if more than one object would be returned.
 	 */
-	public IBean getBean(String pivotName, LscAttributes pivotAttributes, boolean fromSameService) throws LscServiceException {
+	public IBean getBean(String pivotName, LscDatasets pivotAttributes, boolean fromSameService) throws LscServiceException {
 		return sjds.getBean(pivotName, pivotAttributes, fromSameService);
 	}
 
@@ -120,7 +120,7 @@ public class JndiExecutableLdifService extends ExecutableLdifWritableService {
      * @throws LscServiceException 
      * @throws NamingException 
      */
-	public Map<String, LscAttributes> getListPivots() throws LscServiceException {
+	public Map<String, LscDatasets> getListPivots() throws LscServiceException {
 		return sjds.getListPivots();
 	}
 }

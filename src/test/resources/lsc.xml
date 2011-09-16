@@ -76,7 +76,7 @@
         <mainIdentifier>"cn=" + srcBean.getAttributeValueById("cn") + ",ou=ldap2executable2TestTaskDst,ou=Test Data,dc=lsc-project,dc=org"</mainIdentifier>
         <defaultDelimiter>,</defaultDelimiter>
         <defaultPolicy>KEEP</defaultPolicy>
-        <attribute id="17">
+        <dataset id="17">
           <name>telephoneNumber</name>
           <policy>MERGE</policy>
           <defaultValues id="18">
@@ -88,8 +88,8 @@
             <string>"000000"</string>
             <string>"11111"</string>
           </createValues>
-        </attribute>
-        <attribute id="21">
+        </dataset>
+        <dataset id="21">
           <name>objectclass</name>
           <policy>MERGE</policy>
           <defaultValues id="22">
@@ -100,8 +100,8 @@
           <createValues id="24">
             <string>"inetOrgPerson"</string>
           </createValues>
-        </attribute>
-        <attribute id="25">
+        </dataset>
+        <dataset id="25">
           <name>initials</name>
           <policy>FORCE</policy>
           <defaultValues id="26"></defaultValues>
@@ -109,15 +109,15 @@
           <createValues id="28">
             <string>"cn=oops"</string>
           </createValues>
-        </attribute>
-        <attribute id="29">
+        </dataset>
+        <dataset id="29">
           <name>default</name>
           <policy>FORCE</policy>
           <defaultValues id="30"></defaultValues>
           <forceValues id="31"></forceValues>
           <createValues id="32"></createValues>
-        </attribute>
-        <attribute id="33">
+        </dataset>
+        <dataset id="33">
           <name>description</name>
           <policy>MERGE</policy>
           <defaultValues id="34">
@@ -125,16 +125,16 @@
           </defaultValues>
           <forceValues id="35"></forceValues>
           <createValues id="36"></createValues>
-        </attribute>
-        <attribute id="37">
+        </dataset>
+        <dataset id="37">
           <name>seeAlso</name>
           <policy>FORCE</policy>
           <defaultValues id="38"></defaultValues>
           <forceValues id="39"></forceValues>
           <createValues id="40"></createValues>
-        </attribute>
-        <attribute reference="21"></attribute>
-        <attribute id="41">
+        </dataset>
+        <dataset reference="21"></dataset>
+        <dataset id="41">
           <name>userPassword</name>
           <policy>FORCE</policy>
           <defaultValues id="42"></defaultValues>
@@ -142,9 +142,9 @@
             <string>"secret" + srcBean.getAttributeValueById("cn")</string>
           </forceValues>
           <createValues id="44"></createValues>
-        </attribute>
-        <attribute reference="21"></attribute>
-        <attribute id="45">
+        </dataset>
+        <dataset reference="21"></dataset>
+        <dataset id="45">
           <name>mail</name>
           <policy>FORCE</policy>
           <defaultValues id="46"></defaultValues>
@@ -152,7 +152,7 @@
           <createValues id="48">
             <string>"ok@domain.net"</string>
           </createValues>
-        </attribute>
+        </dataset>
       </syncOptions>
     </task>
   </tasks>
