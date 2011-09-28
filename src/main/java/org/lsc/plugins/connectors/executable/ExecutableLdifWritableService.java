@@ -51,12 +51,12 @@ import java.util.Properties;
 
 import javax.naming.CommunicationException;
 
-import org.lsc.IWritableService;
 import org.lsc.LscModifications;
 import org.lsc.configuration.objects.Task;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.jndi.JndiModificationType;
 import org.lsc.jndi.JndiModifications;
+import org.lsc.service.IWritableService;
 import org.lsc.utils.output.LdifLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
