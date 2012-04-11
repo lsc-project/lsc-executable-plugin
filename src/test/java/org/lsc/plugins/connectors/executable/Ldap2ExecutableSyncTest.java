@@ -62,9 +62,9 @@ import org.junit.Before;
 import org.lsc.LscDatasets;
 import org.lsc.SimpleSynchronize;
 import org.lsc.beans.IBean;
+import org.lsc.configuration.LdapConnectionType;
 import org.lsc.configuration.PropertiesConfigurationHelper;
 import org.lsc.configuration.objects.LscConfiguration;
-import org.lsc.configuration.objects.connection.directory.Ldap;
 import org.lsc.exception.LscConfigurationException;
 import org.lsc.exception.LscServiceException;
 import org.lsc.jndi.JndiServices;
@@ -101,8 +101,8 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 	
 	@Before
 	public void setup() {
-		srcJndiServices = JndiServices.getInstance((Ldap)LscConfiguration.getConnection("src-ldap"));
-		dstJndiServices = JndiServices.getInstance((Ldap)LscConfiguration.getConnection("dst-ldap"));
+		srcJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection("src-ldap"));
+		dstJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection("dst-ldap"));
 	}
 	
 	public void setUp() throws LscConfigurationException {

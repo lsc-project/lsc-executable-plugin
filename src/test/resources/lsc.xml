@@ -33,7 +33,7 @@
       <destination class="jndiExecDstService" id="8">
         <name>ldap2executableTestTask-dst</name>
         <connection reference="4"/>
-<!--         <baseDn>ou=ldap2executable2TestTaskDst,ou=Test Data</baseDn>
+<!--         <baseDn>ou=ldap2executable2TestTaskDst,ou=Test Data,dc=lsc-project,dc=org</baseDn>
         <pivotAttributes id="9">
           <string>sn</string>
         </pivotAttributes>
@@ -53,7 +53,7 @@
       <source class="ldapSourceService" id="11">
         <name>ldap2executableTestTask-src</name>
         <connection reference="3" />
-        <baseDn>ou=ldap2executable2TestTaskSrc,ou=Test Data</baseDn>
+        <baseDn>ou=ldap2executable2TestTaskSrc,ou=Test Data,dc=lsc-project,dc=org</baseDn>
         <pivotAttributes id="12">
           <string>sn</string>
         </pivotAttributes>

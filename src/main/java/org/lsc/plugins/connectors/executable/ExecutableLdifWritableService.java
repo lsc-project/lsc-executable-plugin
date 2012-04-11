@@ -52,6 +52,7 @@ import java.util.Properties;
 import javax.naming.CommunicationException;
 
 import org.lsc.LscModifications;
+import org.lsc.configuration.TaskType;
 import org.lsc.configuration.objects.Task;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.jndi.JndiModificationType;
@@ -100,7 +101,7 @@ public class ExecutableLdifWritableService extends ExecutableLdifSourceService i
 		modificationToScript.put(JndiModificationType.MODRDN_ENTRY, (String) props.get("renameScript"));
 	}
 
-	public ExecutableLdifWritableService(Task task) throws LscServiceConfigurationException {
+	public ExecutableLdifWritableService(TaskType task) throws LscServiceConfigurationException {
 		super((ExecutableLdifSourceServiceConfiguration)task.getDestinationService(), task.getBean());
 	}
 

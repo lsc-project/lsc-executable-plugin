@@ -52,7 +52,7 @@ import javax.naming.NamingException;
 
 import org.lsc.LscDatasets;
 import org.lsc.beans.IBean;
-import org.lsc.configuration.objects.Task;
+import org.lsc.configuration.TaskType;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.exception.LscServiceException;
 import org.lsc.jndi.SimpleJndiDstService;
@@ -90,7 +90,7 @@ public class JndiExecutableLdifService extends ExecutableLdifWritableService {
 		sjds = new SimpleJndiDstService(props, beanClassName);
 	}
 
-	public JndiExecutableLdifService(Task task) throws LscServiceConfigurationException {
+	public JndiExecutableLdifService(TaskType task) throws LscServiceConfigurationException {
 		super(task);
 		sjds = new SimpleJndiDstService(task);
 	}
