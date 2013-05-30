@@ -320,7 +320,6 @@ public abstract class AbstractExecutableLdifService implements IService {
         return sb.toString();
     }
 
-    @Override
     public Collection<Class<? extends ConnectionType>> getSupportedConnectionType() {
         Collection<Class<? extends ConnectionType>> list = new ArrayList<Class<? extends ConnectionType>>();
         return list;
