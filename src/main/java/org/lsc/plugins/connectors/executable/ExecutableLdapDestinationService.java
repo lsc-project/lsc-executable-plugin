@@ -59,9 +59,9 @@ import org.lsc.LscDatasets;
 import org.lsc.LscModifications;
 import org.lsc.beans.IBean;
 import org.lsc.configuration.ConnectionType;
+import org.lsc.configuration.KeysValuesMap.Entry;
 import org.lsc.configuration.LdapConnectionType;
 import org.lsc.configuration.TaskType;
-import org.lsc.configuration.KeysValuesMap.Entry;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.exception.LscServiceException;
 import org.lsc.jndi.JndiModificationType;
@@ -128,6 +128,7 @@ public class ExecutableLdapDestinationService extends AbstractExecutableLdifServ
                 }
             }
             interpretor = serviceSettings.getInterpretor();
+            interpretorBinary = serviceSettings.getInterpretorBinary();
 
             beanClass = (Class<IBean>) Class.forName(task.getBean());
 

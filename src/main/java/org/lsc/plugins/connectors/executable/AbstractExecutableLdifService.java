@@ -36,6 +36,7 @@ public abstract class AbstractExecutableLdifService implements IService {
     private static final String ERROR_PREFIX = "ERROR: ";
 
     protected InterpretorType interpretor;
+    protected String interpretorBinary;
     protected String listScript;
     protected String getScript;
     protected Class<IBean> beanClass;
@@ -107,7 +108,7 @@ public abstract class AbstractExecutableLdifService implements IService {
             }
             if(interpretor != null && interpretor == InterpretorType.CYGWIN) {
                 List<String> cygwinRuntime = new ArrayList<String>();
-                cygwinRuntime.addAll(Arrays.asList(new String[] { "c:/cygwin/bin/bash.exe", "-i", "-c" }));
+                cygwinRuntime.addAll(Arrays.asList(new String[] { (interpretorBinary != null ? interpretorBinary : "bash.exe") , "-i", "-c" }));
                 cygwinRuntime.addAll(Arrays.asList(runtime));
                 String[] cygwinRuntimeArray = cygwinRuntime.toArray(new String[cygwinRuntime.size()]);
                 p = rt.exec(cygwinRuntimeArray, env);

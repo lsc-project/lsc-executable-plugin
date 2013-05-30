@@ -123,6 +123,7 @@ public class ExecutableLdifDestinationService extends AbstractExecutableLdifServ
             }
             
             interpretor = serviceSettings.getInterpretor();
+            interpretorBinary = serviceSettings.getInterpretorBinary();
 
             beanClass = (Class<IBean>) Class.forName(task.getBean());
         } catch (ClassNotFoundException e) {

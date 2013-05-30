@@ -54,6 +54,8 @@
 					<xsd:sequence>
 						<xsd:element name="interpretor" type="interpretorType"
 							minOccurs="0"/>
+						<xsd:element name="interpretorBinary" type="xsd:string"
+							minOccurs="0"/>
 						<xsd:element name="listScript" type="xsd:string"
 							minOccurs="1" />
 						<xsd:element name="getScript" type="xsd:string"
@@ -72,6 +74,8 @@
 				<xsd:extension base="lsc:serviceType">
 					<xsd:sequence>
 						<xsd:element name="interpretor" type="interpretorType"
+							minOccurs="0"/>
+						<xsd:element name="interpretorBinary" type="xsd:string"
 							minOccurs="0"/>
 						<xsd:element name="listScript" type="xsd:string"
 							minOccurs="1" />
@@ -101,6 +105,8 @@
 				<xsd:extension base="lsc:ldapSourceServiceType">
 					<xsd:sequence>
 						<xsd:element name="interpretor" type="interpretorType"
+							minOccurs="0"/>
+						<xsd:element name="interpretorBinary" type="xsd:string"
 							minOccurs="0"/>
 						<xsd:element name="addScript" type="xsd:string"
 							minOccurs="1" />

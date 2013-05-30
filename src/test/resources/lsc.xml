@@ -78,8 +78,9 @@
 					</fetchedAttributes>
 					<getAllFilter>(objectClass=person)</getAllFilter>
 					<getOneFilter>(&amp;(objectClass=person)(sn={sn}))</getOneFilter>
-					<exec:interpretor>CYGWIN</exec:interpretor>
-					<exec:addScript>org/lsc/plugins/connectors/executable/add.sh</exec:addScript>
+<!-- 					<exec:interpretor>CYGWIN</exec:interpretor>
+					<exec:interpretorBinary>c:/cygwin/bin/bash.exe</exec:interpretorBinary>
+ -->					<exec:addScript>org/lsc/plugins/connectors/executable/add.sh</exec:addScript>
 					<exec:updateScript>org/lsc/plugins/connectors/executable/update.sh</exec:updateScript>
 					<exec:removeScript>org/lsc/plugins/connectors/executable/delete.sh</exec:removeScript>
 					<exec:renameScript>org/lsc/plugins/connectors/executable/rename.sh</exec:renameScript>

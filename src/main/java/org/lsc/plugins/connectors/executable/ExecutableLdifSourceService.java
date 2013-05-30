@@ -85,6 +85,7 @@ public class ExecutableLdifSourceService extends AbstractExecutableLdifService {
                 }
             }
             interpretor = serviceSettings.getInterpretor();
+            interpretorBinary = serviceSettings.getInterpretorBinary();
             
             beanClass = (Class<IBean>) Class.forName(task.getBean());
         } catch (ClassNotFoundException e) {
