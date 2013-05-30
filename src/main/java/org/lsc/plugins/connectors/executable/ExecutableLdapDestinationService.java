@@ -50,6 +50,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.naming.CommunicationException;
 import javax.naming.NamingException;
@@ -60,6 +61,7 @@ import org.lsc.beans.IBean;
 import org.lsc.configuration.ConnectionType;
 import org.lsc.configuration.LdapConnectionType;
 import org.lsc.configuration.TaskType;
+import org.lsc.configuration.KeysValuesMap.Entry;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.exception.LscServiceException;
 import org.lsc.jndi.JndiModificationType;
@@ -93,7 +95,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Sebastien Bahloul &lt;seb@lsc-project.org&gt;
  */
-public class ExecutableLdapDestinationService implements IWritableService {
+public class ExecutableLdapDestinationService extends AbstractExecutableLdifService implements IWritableService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutableLdapDestinationService.class);
 
@@ -118,6 +120,14 @@ public class ExecutableLdapDestinationService implements IWritableService {
             modificationToScript.put(JndiModificationType.DELETE_ENTRY, serviceSettings.getRemoveScript());
             modificationToScript.put(JndiModificationType.MODIFY_ENTRY, serviceSettings.getUpdateScript());
             modificationToScript.put(JndiModificationType.MODRDN_ENTRY, serviceSettings.getRenameScript());
+
+            globalEnvironmentVariables = new Properties();
+            if(serviceSettings.getVariables() != null) {
+                for(Entry entry : serviceSettings.getVariables().getEntry()) {
+                    globalEnvironmentVariables.put(entry.getKey(), entry.getValue());
+                }
+            }
+            interpretor = serviceSettings.getInterpretor();
 
             beanClass = (Class<IBean>) Class.forName(task.getBean());
 
@@ -177,8 +187,8 @@ public class ExecutableLdapDestinationService implements IWritableService {
         jm.setDistinguishName(lm.getMainIdentifier());
         jm.setNewDistinguishName(lm.getNewMainIdentifier());
         jm.setModificationItems(JndiModifications.fromLscAttributeModifications(lm.getLscAttributeModifications()));
-        exitCode = AbstractExecutableLdifService.execute(AbstractExecutableLdifService.getParameters(modificationToScript.get(jm.getOperation()), 
-                        jm.getDistinguishName()), AbstractExecutableLdifService.getEnv(), ldif);
+        exitCode = execute(getParameters(modificationToScript.get(jm.getOperation()), 
+                        jm.getDistinguishName()), getEnv(), ldif);
         if (exitCode != 0) {
             LOGGER.error("Exit code != 0: {}", exitCode);
         }

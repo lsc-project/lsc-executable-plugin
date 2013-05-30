@@ -3,6 +3,7 @@ package org.lsc.plugins.connectors.executable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.lsc.LscDatasets;
 import org.lsc.beans.IBean;
 import org.lsc.configuration.ConnectionType;
 import org.lsc.exception.LscServiceException;
+import org.lsc.plugins.connectors.executable.generated.InterpretorType;
 import org.lsc.service.IService;
 import org.lsc.utils.output.LdifLayout;
 import org.slf4j.Logger;
@@ -33,10 +35,11 @@ public abstract class AbstractExecutableLdifService implements IService {
     private static final String WARN_PREFIX = "WARN: ";
     private static final String ERROR_PREFIX = "ERROR: ";
 
+    protected InterpretorType interpretor;
     protected String listScript;
     protected String getScript;
     protected Class<IBean> beanClass;
-    protected static Properties globalEnvironmentVariables;
+    protected Properties globalEnvironmentVariables;
     
     /**
      * The simple object getter according to its identifier.
@@ -79,18 +82,18 @@ public abstract class AbstractExecutableLdifService implements IService {
         return map;
     }
 
-    public static int execute(String[] runtime, String[] env, String input) {
+    public int execute(String[] runtime, String[] env, String input) {
         StringBuffer datas = new StringBuffer();
         return execute(runtime, env, input, datas);
     }
 
-    public static String executeWithReturn(String[] runtime, String[] env, String input) {
+    public String executeWithReturn(String[] runtime, String[] env, String input) {
         StringBuffer datas = new StringBuffer();
         execute(runtime, env, input, datas);
         return datas.toString();
     }
 
-    private static int execute(String[] runtime, String[] env, String input, StringBuffer datas) {
+    private int execute(String[] runtime, String[] env, String input, StringBuffer datas) {
         StringBuffer messages = new StringBuffer();
         Process p = null;
         Runtime rt = Runtime.getRuntime();
@@ -102,7 +105,15 @@ public abstract class AbstractExecutableLdifService implements IService {
                 }
                 LOGGER.debug("Lauching '{}'", parametersStr.toString());
             }
-            p = rt.exec(runtime, env);
+            if(interpretor != null && interpretor == InterpretorType.CYGWIN) {
+                List<String> cygwinRuntime = new ArrayList<String>();
+                cygwinRuntime.addAll(Arrays.asList(new String[] { "c:/cygwin/bin/bash.exe", "-i", "-c" }));
+                cygwinRuntime.addAll(Arrays.asList(runtime));
+                String[] cygwinRuntimeArray = cygwinRuntime.toArray(new String[cygwinRuntime.size()]);
+                p = rt.exec(cygwinRuntimeArray, env);
+            } else {
+                p = rt.exec(runtime, env);
+            }
 
             LOGGER.debug("Writing to STDIN {}", input);
 
@@ -118,7 +129,7 @@ public abstract class AbstractExecutableLdifService implements IService {
         } catch (IOException e) {
             // Encountered an error while reading data from output
             LOGGER.error("Encountered an I/O exception while writing data to script {}", runtime);
-            LOGGER.debug(e.toString(), e);
+            LOGGER.error(e.toString(), e);
         } catch (InterruptedException e) {
             // Encountered an interruption
             LOGGER.error("Script {} interrupted", runtime);
@@ -184,7 +195,7 @@ public abstract class AbstractExecutableLdifService implements IService {
         }
     }
 
-    protected static String[] getEnv(String... args) {
+    protected String[] getEnv(String... args) {
         String[] envVars = new String[args.length + globalEnvironmentVariables.size()];
         int i = 0;
         for (String parameter : args) {

@@ -287,6 +287,8 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		attributeValues = new ArrayList<String>(2);
 		attributeValues.add("top");
 		attributeValues.add("person");
+        attributeValues.add("organizationalPerson");
+        attributeValues.add("inetOrgPerson");
 		checkAttributeValues(DN_MODIFY_DST, "objectClass", attributeValues);
 		// the givenName was deleted
 		attributeValues = new ArrayList<String>();
@@ -311,7 +313,8 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		SimpleSynchronize sync = new SimpleSynchronize();
 		List<String> syncType = new ArrayList<String>();
 		List<String> cleanType = new ArrayList<String>();
-
+		sync.setThreads(1);
+		
 		if (doSync) {
 			syncType.add(taskName);
 		}

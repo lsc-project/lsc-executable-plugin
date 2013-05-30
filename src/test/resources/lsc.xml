@@ -37,8 +37,7 @@
 			<asyncLdapSourceService>
 				<name>ldap2executableTestTask-src</name>
 				<connection reference="ldap-src-conn" />
-				<baseDn>ou=ldap2executable2TestTaskSrc,ou=Test
-					Data,dc=lsc-project,dc=org</baseDn>
+				<baseDn>ou=ldap2executable2TestTaskSrc,ou=Test Data,dc=lsc-project,dc=org</baseDn>
 				<pivotAttributes>
 					<string>sn</string>
 				</pivotAttributes>
@@ -62,9 +61,9 @@
 				<exec:executableLdapDestinationServiceSettings>
 					<name>opends-dst-service</name>
 					<connection reference="ldap-dst-conn" />
-					<baseDn>ou=People,dc=lsc-project,dc=org</baseDn>
+					<baseDn>ou=ldap2executable2TestTaskDst,ou=Test Data,dc=lsc-project,dc=org</baseDn>
 					<pivotAttributes>
-						<string>uid</string>
+						<string>sn</string>
 					</pivotAttributes>
 					<fetchedAttributes>
 						<string>description</string>
@@ -74,19 +73,25 @@
 						<string>objectClass</string>
 						<string>uid</string>
 						<string>mail</string>
+						<string>telephoneNumber</string>
+						<string>seeAlso</string>
 					</fetchedAttributes>
-					<getAllFilter>(objectClass=inetorgperson)</getAllFilter>
-					<getOneFilter>(&amp;(objectClass=inetorgperson)(uid={samAccountName}))</getOneFilter>
-					<exec:addScript>add.sh</exec:addScript>
-					<exec:updateScript>update.sh</exec:updateScript>
-					<exec:removeScript>remove.sh</exec:removeScript>
-					<exec:renameScript>rename.sh</exec:renameScript>
+					<getAllFilter>(objectClass=person)</getAllFilter>
+					<getOneFilter>(&amp;(objectClass=person)(sn={sn}))</getOneFilter>
+					<exec:interpretor>CYGWIN</exec:interpretor>
+					<exec:addScript>org/lsc/plugins/connectors/executable/add.sh</exec:addScript>
+					<exec:updateScript>org/lsc/plugins/connectors/executable/update.sh</exec:updateScript>
+					<exec:removeScript>org/lsc/plugins/connectors/executable/delete.sh</exec:removeScript>
+					<exec:renameScript>org/lsc/plugins/connectors/executable/rename.sh</exec:renameScript>
+					<exec:variables>
+						<entry><key>LDAP_BIND_DN</key><value>cn=Directory Manager</value></entry>
+						<entry><key>LDAP_BIND_PW</key><value>secret</value></entry>
+						<entry><key>LDAP_URL</key><value>ldap://localhost:33389</value></entry>
+					</exec:variables>
 				</exec:executableLdapDestinationServiceSettings>
 			</pluginDestinationService>
 			<propertiesBasedSyncOptions>
-				<mainIdentifier>"cn=" + srcBean.getAttributeValueById("cn") +
-					",ou=ldap2executable2TestTaskDst,ou=Test
-					Data,dc=lsc-project,dc=org"</mainIdentifier>
+				<mainIdentifier>js:"cn=" + srcBean.getDatasetFirstValueById("cn") + ",ou=ldap2executable2TestTaskDst,ou=Test Data,dc=lsc-project,dc=org"</mainIdentifier>
 				<defaultDelimiter>,</defaultDelimiter>
 				<defaultPolicy>KEEP</defaultPolicy>
 				<dataset>
@@ -102,14 +107,13 @@
 					</createValues>
 				</dataset>
 				<dataset>
-					<name>objectclass</name>
-					<policy>MERGE</policy>
-					<defaultValues>
-						<string>"person"</string>
-						<string>"top"</string>
-					</defaultValues>
+					<name>objectClass</name>
+					<policy>KEEP</policy>
 					<createValues>
 						<string>"inetOrgPerson"</string>
+						<string>"organizationalPerson"</string>
+						<string>"person"</string>
+						<string>"top"</string>
 					</createValues>
 				</dataset>
 				<dataset>
@@ -127,7 +131,7 @@
 					<name>description</name>
 					<policy>MERGE</policy>
 					<defaultValues>
-						<string>srcBean.getAttributeValueById("userPassword")</string>
+						<string>srcBean.getDatasetFirstValueById("userPassword")</string>
 					</defaultValues>
 				</dataset>
 				<dataset>
@@ -139,7 +143,7 @@
 					<policy>FORCE</policy>
 					<defaultValues></defaultValues>
 					<forceValues>
-						<string>"secret" + srcBean.getAttributeValueById("cn")</string>
+						<string>"secret" + srcBean.getDatasetFirstValueById("cn")</string>
 					</forceValues>
 					<createValues></createValues>
 				</dataset>

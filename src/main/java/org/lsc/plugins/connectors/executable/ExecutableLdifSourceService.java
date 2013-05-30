@@ -45,6 +45,8 @@
  */
 package org.lsc.plugins.connectors.executable;
 
+import java.util.Properties;
+
 import org.lsc.beans.IBean;
 import org.lsc.configuration.KeysValuesMap.Entry;
 import org.lsc.configuration.TaskType;
@@ -72,13 +74,18 @@ public class ExecutableLdifSourceService extends AbstractExecutableLdifService {
                 throw new LscServiceConfigurationException("Unable to identify the executable LDIF source service configuration " + "inside the plugin source node of the task: " + task.getName());
             }
             ExecutableLdifSourceServiceSettings serviceSettings = (ExecutableLdifSourceServiceSettings) task.getPluginSourceService().getAny().get(0);
+            
             listScript = serviceSettings.getListScript();
             getScript = serviceSettings.getGetScript();
+            
+            globalEnvironmentVariables = new Properties();
             if(serviceSettings.getVariables() != null) {
                 for(Entry entry : serviceSettings.getVariables().getEntry()) {
                     globalEnvironmentVariables.put(entry.getKey(), entry.getValue());
                 }
             }
+            interpretor = serviceSettings.getInterpretor();
+            
             beanClass = (Class<IBean>) Class.forName(task.getBean());
         } catch (ClassNotFoundException e) {
             throw new LscServiceConfigurationException(e);

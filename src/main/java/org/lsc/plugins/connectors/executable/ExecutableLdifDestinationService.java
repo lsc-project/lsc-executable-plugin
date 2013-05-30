@@ -48,12 +48,14 @@ package org.lsc.plugins.connectors.executable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.naming.CommunicationException;
 
 import org.lsc.LscModifications;
 import org.lsc.beans.IBean;
 import org.lsc.configuration.TaskType;
+import org.lsc.configuration.KeysValuesMap.Entry;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.jndi.JndiModificationType;
 import org.lsc.jndi.JndiModifications;
@@ -112,6 +114,15 @@ public class ExecutableLdifDestinationService extends AbstractExecutableLdifServ
             modificationToScript.put(JndiModificationType.MODRDN_ENTRY, serviceSettings.getRenameScript());
             
             writableDatasetIds = serviceSettings.getFetchedAttributes().getString();
+
+            globalEnvironmentVariables = new Properties();
+            if(serviceSettings.getVariables() != null) {
+                for(Entry entry : serviceSettings.getVariables().getEntry()) {
+                    globalEnvironmentVariables.put(entry.getKey(), entry.getValue());
+                }
+            }
+            
+            interpretor = serviceSettings.getInterpretor();
 
             beanClass = (Class<IBean>) Class.forName(task.getBean());
         } catch (ClassNotFoundException e) {
