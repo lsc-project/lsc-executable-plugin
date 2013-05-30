@@ -58,13 +58,13 @@ import javax.naming.directory.SearchResult;
 
 import junit.framework.TestCase;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.lsc.LscDatasets;
 import org.lsc.SimpleSynchronize;
 import org.lsc.beans.IBean;
+import org.lsc.configuration.JaxbXmlConfigurationHelper;
 import org.lsc.configuration.LdapConnectionType;
-import org.lsc.configuration.PropertiesConfigurationHelper;
-import org.lsc.configuration.objects.LscConfiguration;
+import org.lsc.configuration.LscConfiguration;
 import org.lsc.exception.LscConfigurationException;
 import org.lsc.exception.LscServiceException;
 import org.lsc.jndi.JndiServices;
@@ -84,7 +84,10 @@ import org.lsc.utils.directory.LDAP;
  */
 public class Ldap2ExecutableSyncTest extends TestCase {
 
-	private final String TASK_NAME = "ldap2executableTestTask";
+	private static final String SOURCE_LDAP_CONNECTION = "ldap-src-conn";
+    private static final String DESTINATION_LDAP_CONNECTION = "ldap-dst-conn";
+    
+    private final String TASK_NAME = "ldap2executableTestTask";
 	private final String DN_ADD_SRC = "cn=CN0003,ou=ldap2executable2TestTaskSrc,ou=Test Data,dc=lsc-project,dc=org";
 	private final String DN_ADD_DST = "cn=CN0003,ou=ldap2executable2TestTaskDst,ou=Test Data,dc=lsc-project,dc=org";
 	private final String DN_MODIFY_SRC = "cn=CN0001,ou=ldap2executable2TestTaskSrc,ou=Test Data,dc=lsc-project,dc=org";
@@ -99,16 +102,13 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 	
 	private JndiServices dstJndiServices;
 	
-	@Before
-	public void setup() {
-		srcJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection("src-ldap"));
-		dstJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection("dst-ldap"));
-	}
-	
+	@BeforeClass
 	public void setUp() throws LscConfigurationException {
-		PropertiesConfigurationHelper.loadConfigurationFrom(this.getClass().getClassLoader().getResource("lsc.properties").getPath());
+        LscConfiguration.loadFromInstance(new JaxbXmlConfigurationHelper().getConfiguration(this.getClass().getClassLoader().getResource(JaxbXmlConfigurationHelper.LSC_CONF_XML).getPath()));
+		srcJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection(SOURCE_LDAP_CONNECTION));
+		dstJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection(DESTINATION_LDAP_CONNECTION));
 	}
-	
+
 	/**
 	 * Test reading the userPassword attribute from our source directory through Object
 	 * and Bean. This attribute has a binary syntax, so we must confirm we can parse it as a String.
@@ -128,7 +128,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		IService srcService = new SimpleJndiSrcService(LscConfiguration.getTask(TASK_NAME));
 		Entry<String, LscDatasets> obj = ids.entrySet().iterator().next();
 		IBean srcBean = srcService.getBean(obj.getKey(), obj.getValue(), true);
-		String userPassword = srcBean.getAttributeFirstValueById("userPassword");
+		String userPassword = srcBean.getDatasetFirstValueById("userPassword");
 
 		// OpenDS automatically hashes the password using seeded SHA,
 		// so we can't test the full value, just the beginning.
@@ -160,10 +160,10 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		checkAttributeValue(DN_MODIFY_SRC, "description", "Number one's descriptive text");
 		checkAttributeValue(DN_MODIFY_SRC, "sn", "SN0001");
 		// the original password is present and can be used
-		assertTrue(LDAP.canBind(LscConfiguration.getConnection("src-ldap").getUrl(), DN_MODIFY_SRC, "secret0001"));
+		assertTrue(LDAP.canBind(LscConfiguration.getConnection(SOURCE_LDAP_CONNECTION).getUrl(), DN_MODIFY_SRC, "secret0001"));
 		// the new password can not be used yet
-		assertFalse(LDAP.canBind(LscConfiguration.getConnection("src-ldap").getUrl(), DN_MODIFY_SRC, "secretCN0001"));
-		assertFalse(LDAP.canBind(LscConfiguration.getConnection("src-ldap").getUrl(), DN_MODIFY_DST, "secretCN0001"));
+		assertFalse(LDAP.canBind(LscConfiguration.getConnection(SOURCE_LDAP_CONNECTION).getUrl(), DN_MODIFY_SRC, "secretCN0001"));
+		assertFalse(LDAP.canBind(LscConfiguration.getConnection(SOURCE_LDAP_CONNECTION).getUrl(), DN_MODIFY_DST, "secretCN0001"));
 
 		// perform the sync
 		launchSyncCleanTask(TASK_NAME, true, false);
@@ -216,7 +216,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		// check MODRDN
 
 		// the password was set and can be used
-		assertTrue(LDAP.canBind(LscConfiguration.getConnection("dst-ldap").getUrl(), DN_MODRDN_DST_AFTER, "secretCN0002"));
+		assertTrue(LDAP.canBind(LscConfiguration.getConnection(DESTINATION_LDAP_CONNECTION).getUrl(), DN_MODRDN_DST_AFTER, "secretCN0002"));
 
 		// the description was copied over since this is an existing object and it description is set to MERGE
 		attributeValues = new ArrayList<String>(2);
@@ -257,7 +257,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		// the description was copied over
 		checkAttributeValue(DN_ADD_DST, "description", "Number three's descriptive text");
 		// the password was set and can be used
-		assertTrue(LDAP.canBind(LscConfiguration.getConnection("dst-ldap").getUrl(), DN_ADD_DST, "secretCN0003"));
+		assertTrue(LDAP.canBind(LscConfiguration.getConnection(DESTINATION_LDAP_CONNECTION).getUrl(), DN_ADD_DST, "secretCN0003"));
 
 		// objectClass has inetOrgPerson and all above classes, since it was created with a create_value and MERGE status
 		attributeValues = new ArrayList<String>(2);
@@ -271,7 +271,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		// sn shouldn't have changed
 		checkAttributeValue(DN_MODIFY_DST, "sn", "SN0001");
 		// the password was set and can be used
-		assertTrue(LDAP.canBind(LscConfiguration.getConnection("dst-ldap").getUrl(), DN_MODIFY_DST, "secretCN0001"));
+		assertTrue(LDAP.canBind(LscConfiguration.getConnection(DESTINATION_LDAP_CONNECTION).getUrl(), DN_MODIFY_DST, "secretCN0001"));
 		// the description was copied over since this is an existing object and it description is set to MERGE
 		attributeValues = new ArrayList<String>(2);
 		attributeValues.add("Number one's descriptive text");

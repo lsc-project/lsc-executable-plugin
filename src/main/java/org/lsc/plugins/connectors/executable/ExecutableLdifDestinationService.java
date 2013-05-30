@@ -46,17 +46,18 @@
 package org.lsc.plugins.connectors.executable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.naming.CommunicationException;
 
 import org.lsc.LscModifications;
+import org.lsc.beans.IBean;
 import org.lsc.configuration.TaskType;
-import org.lsc.configuration.objects.Task;
 import org.lsc.exception.LscServiceConfigurationException;
 import org.lsc.jndi.JndiModificationType;
 import org.lsc.jndi.JndiModifications;
+import org.lsc.plugins.connectors.executable.generated.ExecutableLdifDestinationServiceSettings;
 import org.lsc.service.IWritableService;
 import org.lsc.utils.output.LdifLayout;
 import org.slf4j.Logger;
@@ -85,27 +86,39 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Sebastien Bahloul &lt;seb@lsc-project.org&gt;
  */
-public class ExecutableLdifWritableService extends ExecutableLdifSourceService implements IWritableService {
+public class ExecutableLdifDestinationService extends AbstractExecutableLdifService implements IWritableService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExecutableLdifWritableService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExecutableLdifDestinationService.class);
 
 	/** Map a JndiModificationType to the associated Script **/
 	private Map<JndiModificationType, String> modificationToScript = new HashMap<JndiModificationType, String>();
 
-	@Deprecated
-	public ExecutableLdifWritableService(Properties props, String beanClassName) throws LscServiceConfigurationException {
-		super(props, beanClassName);
-		modificationToScript.put(JndiModificationType.ADD_ENTRY, (String) props.get("addScript"));
-		modificationToScript.put(JndiModificationType.DELETE_ENTRY, (String) props.get("deleteScript"));
-		modificationToScript.put(JndiModificationType.MODIFY_ENTRY, (String) props.get("updateScript"));
-		modificationToScript.put(JndiModificationType.MODRDN_ENTRY, (String) props.get("renameScript"));
+    private List<String> writableDatasetIds;
+
+	@SuppressWarnings("unchecked")
+    public ExecutableLdifDestinationService(TaskType task) throws LscServiceConfigurationException {
+        try {
+            if (task.getPluginDestinationService().getAny() == null || task.getPluginDestinationService().getAny().size() != 1 || !(task.getPluginDestinationService().getAny().get(0) instanceof ExecutableLdifDestinationServiceSettings)) {
+                throw new LscServiceConfigurationException("Unable to identify the executable LDIF destination service configuration " + "inside the plugin destination node of the task: " + task.getName());
+            }
+            
+            ExecutableLdifDestinationServiceSettings serviceSettings = (ExecutableLdifDestinationServiceSettings) task.getPluginDestinationService().getAny().get(0);
+
+            listScript = serviceSettings.getListScript();
+            getScript = serviceSettings.getGetScript();
+            modificationToScript.put(JndiModificationType.ADD_ENTRY, serviceSettings.getAddScript());
+            modificationToScript.put(JndiModificationType.DELETE_ENTRY, serviceSettings.getRemoveScript());
+            modificationToScript.put(JndiModificationType.MODIFY_ENTRY, serviceSettings.getUpdateScript());
+            modificationToScript.put(JndiModificationType.MODRDN_ENTRY, serviceSettings.getRenameScript());
+            
+            writableDatasetIds = serviceSettings.getFetchedAttributes().getString();
+
+            beanClass = (Class<IBean>) Class.forName(task.getBean());
+        } catch (ClassNotFoundException e) {
+            throw new LscServiceConfigurationException(e);
+        }
 	}
 
-	public ExecutableLdifWritableService(TaskType task) throws LscServiceConfigurationException {
-		super((ExecutableLdifSourceServiceConfiguration)task.getDestinationService(), task.getBean());
-	}
-
-	
 	/**
 	 * Apply directory modifications.
 	 *
@@ -128,4 +141,10 @@ public class ExecutableLdifWritableService extends ExecutableLdifSourceService i
 		}
 		return exitCode == 0;
 	}
+
+    @Override
+    public List<String> getWriteDatasetIds() {
+        return writableDatasetIds;
+    }
+
 }
