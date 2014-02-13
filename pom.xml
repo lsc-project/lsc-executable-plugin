@@ -106,8 +106,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<episode>true</episode>
-					<episodeFile>${basedir}/lsc.episode</episodeFile>
+					<episode>false</episode>
 					<generateDirectory>src/main/java</generateDirectory>
 					<generatePackage>org.lsc.plugins.connectors.executable.generated</generatePackage>
 					<bindingDirectory>src/main/resources/schemas</bindingDirectory>
