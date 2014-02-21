@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -269,7 +270,7 @@ public abstract class AbstractExecutableLdifService implements IService {
         StringBuilder sb = new StringBuilder();
         for (String attributeName : attributes.getDatasets().keySet()) {
             try {
-                LdifLayout.printAttributeToStringBuffer(sb, attributeName, new ArrayList<Object>(attributes.getListValueAttribute(attributeName)));
+                LdifLayout.printAttributeToStringBuffer(sb, attributeName, Collections.singletonList((Object)attributes.getStringValueAttribute(attributeName)));
             } catch (NamingException e) {
                 throw new LscServiceException("Error while converting LscAttributes to LDIF: " + e.toString(), e);
             }
