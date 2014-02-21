@@ -80,10 +80,10 @@
 					<getOneFilter>(&amp;(objectClass=person)(sn={sn}))</getOneFilter>
 <!-- 					<exec:interpretor>CYGWIN</exec:interpretor>
 					<exec:interpretorBinary>c:/cygwin/bin/bash.exe</exec:interpretorBinary>
- -->					<exec:addScript>org/lsc/plugins/connectors/executable/add.sh</exec:addScript>
-					<exec:updateScript>org/lsc/plugins/connectors/executable/update.sh</exec:updateScript>
-					<exec:removeScript>org/lsc/plugins/connectors/executable/delete.sh</exec:removeScript>
-					<exec:renameScript>org/lsc/plugins/connectors/executable/rename.sh</exec:renameScript>
+ -->					<exec:addScript>src/test/resources/org/lsc/plugins/connectors/executable/add.sh</exec:addScript>
+					<exec:updateScript>src/test/resources/org/lsc/plugins/connectors/executable/update.sh</exec:updateScript>
+					<exec:removeScript>src/test/resources/org/lsc/plugins/connectors/executable/delete.sh</exec:removeScript>
+					<exec:renameScript>src/test/resources/org/lsc/plugins/connectors/executable/rename.sh</exec:renameScript>
 					<exec:variables>
 						<entry><key>LDAP_BIND_DN</key><value>cn=Directory Manager</value></entry>
 						<entry><key>LDAP_BIND_PW</key><value>secret</value></entry>
