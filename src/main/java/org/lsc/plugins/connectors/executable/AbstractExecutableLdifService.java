@@ -5,8 +5,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -14,7 +14,13 @@ import java.util.StringTokenizer;
 
 import javax.naming.NamingException;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.directory.shared.ldap.model.entry.Attribute;
+import org.apache.directory.shared.ldap.model.entry.Entry;
+import org.apache.directory.shared.ldap.model.entry.Value;
+import org.apache.directory.shared.ldap.model.exception.LdapException;
+import org.apache.directory.shared.ldap.model.ldif.LdifEntry;
+import org.apache.directory.shared.ldap.model.ldif.LdifReader;
 import org.lsc.LscDatasets;
 import org.lsc.beans.IBean;
 import org.lsc.configuration.ConnectionType;
@@ -137,22 +143,16 @@ public abstract class AbstractExecutableLdifService implements IService {
             LOGGER.debug(e.toString(), e);
         }
 
-        byte[] data = new byte[65535];
         try {
-            while (p.getInputStream() != null && p.getInputStream().read(data) > 0) {
-                datas.append(new String(data));
-            }
+        	datas.append(IOUtils.toString(p.getInputStream()));
         } catch (IOException e) {
             // Failing to read the complete string causes null return
             LOGGER.error("Fail to read complete data from script output stream: {}", runtime);
             LOGGER.debug(e.toString(), e);
         }
 
-        byte[] message = new byte[65535];
         try {
-            while (p.getErrorStream().read(message) > 0) {
-                messages.append(new String(message));
-            }
+        	messages.append(IOUtils.toString(p.getErrorStream()));
         } catch (IOException e) {
             // Failing to read the complete string causes null return
             LOGGER.error("Fail to read complete messages from script stderr stream: {}", runtime);
@@ -217,26 +217,44 @@ public abstract class AbstractExecutableLdifService implements IService {
         return parameters;
     }
 
-    private Collection<IBean> fromLdif(String output) {
+    /*package-private*/ Collection<IBean> fromLdif(String output) {
         ArrayList<IBean> beans = new ArrayList<IBean>();
-        try {
-            IBean bean = null;
-            StringTokenizer sTok = new StringTokenizer(output, "\n", true);
-            while (sTok.hasMoreTokens()) {
-                bean = beanClass.newInstance();
-                String entryStr = "";
-                while (sTok.hasMoreTokens()) {
-                    String line = sTok.nextToken();
-                    entryStr += line;
-                    if (entryStr.endsWith("\n\n")) {
-                        break;
-                    }
-                }
-                if (entryStr.trim().length() > 0) {
-                    updateBean(bean, entryStr);
-                    beans.add(bean);
-                }
-            }
+    	LdifReader ldifReader = null;
+    	try {
+			ldifReader = new LdifReader();
+			List<LdifEntry> ldifEntries = ldifReader.parseLdif(output);
+			for (LdifEntry ldifEntry: ldifEntries) {
+				Entry entry = ldifEntry.getEntry();
+				IBean bean = entryToBean(entry);
+				beans.add(bean);
+			}
+		} catch (LdapException e) {
+			LOGGER.error("Can't parse entries: {}", output);
+            LOGGER.debug(e.toString(), e);
+		} finally {
+			try {
+				if (ldifReader != null) {
+					ldifReader.close();
+				}
+			} catch (IOException e) { /* Ignore */ }
+		}
+
+        return beans;
+    }
+
+	private IBean entryToBean(Entry entry) {
+		IBean bean = null;
+		try {
+			bean = beanClass.newInstance();
+			bean.setMainIdentifier(entry.getDn().getName());
+			for (Attribute attribute: entry.getAttributes()) {
+				String attributeId = attribute.getId().toLowerCase();
+				HashSet<Object> values = new HashSet<Object>();
+				for (Value<?> value: attribute) {
+					values.add(value.getValue());
+				}
+				bean.setDataset(attributeId, values);
+			}
         } catch (InstantiationException e) {
             LOGGER.error("Bean class name: {}", beanClass.getName());
             LOGGER.debug(e.toString(), e);
@@ -244,75 +262,14 @@ public abstract class AbstractExecutableLdifService implements IService {
             LOGGER.error("Bean class name: {}", beanClass.getName());
             LOGGER.debug(e.toString(), e);
         }
-
-        return beans;
-    }
-
-    private void updateBean(IBean bean, String entryStr) {
-        StringTokenizer sTok = new StringTokenizer(entryStr, "\n");
-        String multiLineValue = null;
-        String multiLineAttribute = null;
-        boolean base64 = false;
-        while (sTok.hasMoreTokens()) {
-            String line = sTok.nextToken();
-            if (multiLineValue != null && !line.startsWith(" ")) {
-                // End of multi line value
-                if (base64) {
-                    String attributeValue = new String(Base64.decodeBase64(multiLineValue.getBytes()));
-                    updateBeanAttributeValue(bean, multiLineAttribute, attributeValue);
-                } else {
-                    updateBeanAttributeValue(bean, multiLineAttribute, multiLineValue);
-                }
-                multiLineValue = null;
-            }
-            if (multiLineValue != null && line.startsWith(" ")) {
-                multiLineValue += line.substring(1);
-            } else if (line.contains(":: ")) {
-                multiLineAttribute = line.substring(0, line.indexOf(":"));
-                multiLineValue = line.substring(line.indexOf(":: ") + 3);
-                base64 = true;
-            } else if (line.contains(": ")) {
-                multiLineAttribute = line.substring(0, line.indexOf(":"));
-                multiLineValue = line.substring(line.indexOf(": ") + 2);
-                base64 = false;
-            } else if (line.trim().length() == 0) {
-                break;
-            } else {
-                // TODO
-                LOGGER.error("Got something strange : '{}'. Please consider checking as this data may be either an incorrect format or an error !", line);
-            }
-        }
-        if (multiLineValue != null) {
-            if (base64) {
-                String attributeValue = new String(Base64.decodeBase64(multiLineValue.getBytes()));
-                updateBeanAttributeValue(bean, multiLineAttribute, attributeValue);
-            } else {
-                updateBeanAttributeValue(bean, multiLineAttribute, multiLineValue);
-            }
-        }
-    }
-
-    private void updateBeanAttributeValue(IBean bean,
-                    String attributeName, String attributeValue) {
-        if (attributeName.equals("dn")) {
-            bean.setMainIdentifier(attributeValue);
-        } else {
-            if (bean.getDatasetById(attributeName) != null) {
-                bean.getDatasetById(attributeName).add(attributeValue);
-            } else {
-                bean.datasets().put(attributeName, Collections.singleton(attributeValue));
-            }
-            if (bean.getMainIdentifier() == null) {
-                bean.setMainIdentifier(attributeValue);
-            }
-        }
-    }
-
+		return bean;
+	}
+    
     private String toLdif(LscDatasets attributes) throws LscServiceException {
         StringBuilder sb = new StringBuilder();
         for (String attributeName : attributes.getDatasets().keySet()) {
             try {
-                LdifLayout.printAttributeToStringBuffer(sb, attributeName, (List<Object>) attributes.getListValueAttribute(attributeName));
+                LdifLayout.printAttributeToStringBuffer(sb, attributeName, new ArrayList<Object>(attributes.getListValueAttribute(attributeName)));
             } catch (NamingException e) {
                 throw new LscServiceException("Error while converting LscAttributes to LDIF: " + e.toString(), e);
             }
