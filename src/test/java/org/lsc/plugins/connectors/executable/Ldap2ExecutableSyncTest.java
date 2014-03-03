@@ -104,7 +104,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 	
 	@BeforeClass
 	public void setUp() throws LscConfigurationException {
-        LscConfiguration.loadFromInstance(new JaxbXmlConfigurationHelper().getConfiguration(this.getClass().getClassLoader().getResource(JaxbXmlConfigurationHelper.LSC_CONF_XML).getPath()));
+        LscConfiguration.loadFromInstance(new JaxbXmlConfigurationHelper().getConfiguration(this.getClass().getClassLoader().getResource("etc/" + JaxbXmlConfigurationHelper.LSC_CONF_XML).getPath()));
 		srcJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection(SOURCE_LDAP_CONNECTION));
 		dstJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection(DESTINATION_LDAP_CONNECTION));
 	}
