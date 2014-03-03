@@ -82,7 +82,7 @@ while (<CSV>) {
             # Check if pivot field exists
             unless ( grep ( /^$csv_pivot_field$/, @attributes ) ) {
                 print STDERR
-                  "ERROR Pivot field $csv_pivot_field not present in CSV file";
+                  "ERROR: Pivot field $csv_pivot_field not present in CSV file";
                 exit 1;
             }
 
@@ -110,7 +110,7 @@ while (<CSV>) {
 
         # Error in parsing
         my $err = $csv->error_input;
-        print STDERR "WARN Failed to parse line: $err\n";
+        print STDERR "WARN: Failed to parse line: $err\n";
     }
 
     next;
