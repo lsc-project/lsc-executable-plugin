@@ -31,6 +31,7 @@
 #                  ==LICENSE NOTICE==
 #
 # Author: Ronan Lanore
+# Author: Clement Oudot
 
 
 use strict ;
@@ -38,10 +39,12 @@ use Net::LDAP::LDIF ;
 
 my $ldif = Net::LDAP::LDIF->new( \*STDIN, "r", onerror => 'undef' );
 my $entry = $ldif->read_entry();
+
 if ( $ldif->error() ) {
 	print STDERR "ERROR: ", $ldif->error(), "\n";
 	print STDERR "ERROR: ", $ldif->error_lines(), "\n";
 } 
+
 else {	
 	# modify check
 	if ( $entry->changetype() eq "add" ) {
@@ -50,7 +53,10 @@ else {
 	}
 	if ( $entry->changetype() eq "delete" ) {
 	}
+	if ( $entry->changetype() eq "modrdn" or $entry->changetype() eq "moddn" ) {
+	}
 	
 }
 $ldif->done();
+
 exit(0) ;
