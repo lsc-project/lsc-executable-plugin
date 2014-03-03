@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #                  ==LICENSE NOTICE==
-# 
-# Copyright (c) 2008, LSC Project 
+#
+# Copyright (c) 2008, LSC Project
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
 #     * Neither the name of the LSC Project nor the names of its
 # contributors may be used to endorse or promote products derived from
 # this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
 # IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 # TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -33,30 +33,30 @@
 # Author: Ronan Lanore
 # Author: Clement Oudot
 
-
-use strict ;
-use Net::LDAP::LDIF ;
+use strict;
+use Net::LDAP::LDIF;
 
 my $ldif = Net::LDAP::LDIF->new( \*STDIN, "r", onerror => 'undef' );
 my $entry = $ldif->read_entry();
 
 if ( $ldif->error() ) {
-	print STDERR "ERROR: ", $ldif->error(), "\n";
-	print STDERR "ERROR: ", $ldif->error_lines(), "\n";
-} 
+    print STDERR "ERROR: ", $ldif->error(),       "\n";
+    print STDERR "ERROR: ", $ldif->error_lines(), "\n";
+}
 
-else {	
-	# modify check
-	if ( $entry->changetype() eq "add" ) {
-	}
-	if ( $entry->changetype() eq "modify" ) {
-	}
-	if ( $entry->changetype() eq "delete" ) {
-	}
-	if ( $entry->changetype() eq "modrdn" or $entry->changetype() eq "moddn" ) {
-	}
-	
+else {
+
+    # modify check
+    if ( $entry->changetype() eq "add" ) {
+    }
+    if ( $entry->changetype() eq "modify" ) {
+    }
+    if ( $entry->changetype() eq "delete" ) {
+    }
+    if ( $entry->changetype() eq "modrdn" or $entry->changetype() eq "moddn" ) {
+    }
+
 }
 $ldif->done();
 
-exit(0) ;
+exit(0);
