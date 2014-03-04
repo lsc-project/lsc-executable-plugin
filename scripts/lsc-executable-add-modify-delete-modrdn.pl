@@ -50,6 +50,7 @@ my $entry = $ldif->read_entry();
 if ( $ldif->error() ) {
     print STDERR "ERROR: ", $ldif->error(),       "\n";
     print STDERR "ERROR: ", $ldif->error_lines(), "\n";
+    exit 1;
 }
 
 #===================================================
@@ -70,4 +71,4 @@ else {
 }
 $ldif->done();
 
-exit(0);
+exit 0;
