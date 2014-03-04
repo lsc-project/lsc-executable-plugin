@@ -1,4 +1,6 @@
 #!/usr/bin/perl -w
+
+#===================================================
 #                  ==LICENSE NOTICE==
 #
 # Copyright (c) 2008, LSC Project
@@ -32,10 +34,16 @@
 #
 # Author: Ronan Lanore
 # Author: Clement Oudot
+#===================================================
+
+my $VERSION = 1.0;
 
 use strict;
 use Net::LDAP::LDIF;
 
+#===================================================
+# Read LDIF entry
+#===================================================
 my $ldif = Net::LDAP::LDIF->new( \*STDIN, "r", onerror => 'undef' );
 my $entry = $ldif->read_entry();
 
@@ -44,6 +52,9 @@ if ( $ldif->error() ) {
     print STDERR "ERROR: ", $ldif->error_lines(), "\n";
 }
 
+#===================================================
+# Launch commands
+#===================================================
 else {
 
     # modify check
