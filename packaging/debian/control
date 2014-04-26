@@ -1,0 +1,14 @@
+Source: lsc-executable-plugin
+Section: java
+Priority: optional
+Maintainer: Clement Oudot <clem.oudot@gmail.com>
+Build-Depends: debhelper (>> 7)
+Standards-Version: 3.9.5
+Homepage: http://lsc-project.org/
+Vcs-Svn: https://lsc-project.org/svn/
+Vcs-Browser: http://tools.lsc-project.org/repositories/show/lsc
+
+Package: lsc-executable-plugin
+Architecture: all
+Depends: ${misc:Depends}, lsc (>= 2.1.0)
+Description: This is an Executable plugin for LSC

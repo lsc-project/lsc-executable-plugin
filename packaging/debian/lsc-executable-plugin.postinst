@@ -1,0 +1,11 @@
+#!/bin/bash
+
+lsc_user=lsc
+lsc_group=lsc
+
+chown ${lsc_user}:${lsc_group} /usr/lib/lsc/lsc-executable-plugin*
+chown ${lsc_user}:${lsc_group} /var/lib/lsc/*
+
+#DEBHELPER#
+
+exit 0
