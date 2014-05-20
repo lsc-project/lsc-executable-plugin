@@ -12,7 +12,7 @@
 # Variables
 #=================================================
 %define lsc_executable_name	lsc-executable-plugin
-%define lsc_executabme_version	1.0
+%define lsc_executable_version	1.0
 %define lsc_min_version		2.1.0
 %define lsc_user		lsc
 %define lsc_group		lsc
