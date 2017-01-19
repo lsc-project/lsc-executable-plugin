@@ -45,6 +45,8 @@
  */
 package org.lsc.plugins.connectors.executable;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -95,7 +97,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Sebastien Bahloul &lt;seb@lsc-project.org&gt;
  */
-public class ExecutableLdapDestinationService extends AbstractExecutableLdifService implements IWritableService {
+public class ExecutableLdapDestinationService extends AbstractExecutableLdifService implements IWritableService, Closeable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutableLdapDestinationService.class);
 
@@ -201,5 +203,10 @@ public class ExecutableLdapDestinationService extends AbstractExecutableLdifServ
         Collection<Class<? extends ConnectionType>> list = new ArrayList<Class<? extends ConnectionType>>();
         list.add(LdapConnectionType.class);
         return list;
+    }
+    
+    @Override
+    public void close() throws IOException {
+    	sjds.close();
     }
 }

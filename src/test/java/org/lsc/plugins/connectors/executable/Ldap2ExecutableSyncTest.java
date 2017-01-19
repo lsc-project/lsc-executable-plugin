@@ -105,6 +105,10 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 	@BeforeClass
 	public void setUp() throws LscConfigurationException {
         LscConfiguration.loadFromInstance(new JaxbXmlConfigurationHelper().getConfiguration(this.getClass().getClassLoader().getResource("etc/" + JaxbXmlConfigurationHelper.LSC_CONF_XML).getPath()));
+        reloadJndiConnections();
+	}
+
+	private void reloadJndiConnections() {
 		srcJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection(SOURCE_LDAP_CONNECTION));
 		dstJndiServices = JndiServices.getInstance((LdapConnectionType)LscConfiguration.getConnection(DESTINATION_LDAP_CONNECTION));
 	}
@@ -119,7 +123,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 	 * @throws LscServiceException 
 	 * @throws NamingException 
 	 */
-	public final void testReadUserPasswordFromLdap() throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, LscServiceException, NamingException {
+	public final void testReadUserPasswordFromLdap() throws Exception {
 		Map<String, LscDatasets> ids = new HashMap<String, LscDatasets>(1);
 		Map<String, String> attributeValues = new HashMap<String, String>(1);
 		attributeValues.put("sn", "SN0001");
@@ -134,6 +138,8 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		// so we can't test the full value, just the beginning.
 		// This is sufficient to confirm we can read the attribute as a String.
 		assertTrue(userPassword.startsWith("{SSHA}"));
+		
+		((SimpleJndiSrcService)srcService).close();
 	}
 
 	public final void testSyncLdap2Ldap() throws Exception {
@@ -169,18 +175,21 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		launchSyncCleanTask(TASK_NAME, true, false);
 
 		// check the results of the synchronization
+		reloadJndiConnections();
 		checkSyncResultsFirstPass();
 
 		// sync again to confirm convergence
 		launchSyncCleanTask(TASK_NAME, true, false);
 
 		// check the results of the synchronization
+		reloadJndiConnections();
 		checkSyncResultsSecondPass();
 
 		// sync a third time to make sure nothing changed
 		launchSyncCleanTask(TASK_NAME, true, false);
 
 		// check the results of the synchronization
+		reloadJndiConnections();
 		checkSyncResultsSecondPass();
 	}
 
@@ -304,6 +313,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		launchSyncCleanTask(TASK_NAME, false, true);
 
 		// check the results of the clean
+		reloadJndiConnections();
 		assertFalse(dstJndiServices.exists(DN_DELETE_DST));
 	}
 
