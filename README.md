@@ -1,5 +1,6 @@
-Executable LSC Plugin
----------------------
+# Executable LSC Plugin
+
+[![Build Status](https://travis-ci.org/lsc-project/lsc-executable-plugin.svg?branch=master)](https://travis-ci.org/lsc-project/lsc-executable-plugin)
 
 This plugin enables any sysadmin to use LSC on a custom source or destination without writing Java code, only by
 wrapping each method through a script command.
@@ -18,3 +19,5 @@ The design of a destination connector requires 4 more scripts :
 - the RENAME script which change the DN of an existing entry (modrdn operation)
 
 A final combination of LDAP to get data and scripts to update is also available (see executableLdapDestinationService)
+
+Full documentation: http://lsc-project.org/wiki/documentation/plugins/executable
