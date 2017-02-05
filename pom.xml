@@ -131,7 +131,7 @@
 			<plugin>
 				<groupId>org.reflections</groupId>
 				<artifactId>reflections-maven</artifactId>
-				<version>0.9.5</version>
+				<version>0.9.9-RC1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.slf4j</groupId>
@@ -198,7 +198,7 @@
 											reflections-maven
 										</artifactId>
 										<versionRange>
-											[0.9.5,)
+											[0.9.9-RC1,)
 										</versionRange>
 										<goals>
 											<goal>reflections</goal>
