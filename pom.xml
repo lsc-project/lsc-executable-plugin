@@ -48,6 +48,32 @@
 		<finalName>lsc-executable-plugin-${project.version}</finalName>
 
 		<plugins>
+            <plugin>
+            <!--
+            Quickfix so the maven-jaxb2-plugin is JDK 8 compatible
+            See https://java.net/jira/browse/MAVEN_JAXB2_PLUGIN-80.
+            Please remove this when jaxb plugins is upgraded to 0.9.0+
+            -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <id>set-additional-system-properties</id>
+                        <goals>
+                            <goal>set-system-properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <properties>
+                        <property>
+                            <name>javax.xml.accessExternalSchema</name>
+                            <value>file,http</value>
+                        </property>
+                    </properties>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -131,7 +157,7 @@
 			<plugin>
 				<groupId>org.reflections</groupId>
 				<artifactId>reflections-maven</artifactId>
-				<version>0.9.5</version>
+				<version>0.9.9-RC1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.slf4j</groupId>
@@ -198,7 +224,7 @@
 											reflections-maven
 										</artifactId>
 										<versionRange>
-											[0.9.5,)
+											[0.9.9-RC1,)
 										</versionRange>
 										<goals>
 											<goal>reflections</goal>
@@ -217,7 +243,7 @@
 											maven-jaxb2-plugin
 										</artifactId>
 										<versionRange>
-											[0.7.3,)
+											[1.1.1,)
 										</versionRange>
 										<goals>
 											<goal>generate</goal>
@@ -245,10 +271,8 @@
 				<dependency>
 					<groupId>org.forgerock.opendj</groupId>
 					<artifactId>opendj-server</artifactId>
-					<version>2.4.5</version>
-					<type>jar</type>
+					<version>2.6.2</version>
 					<scope>compile</scope>
-					<optional>false</optional>
 				</dependency>
 			</dependencies>
 			<build>
@@ -339,40 +363,17 @@
 
 	<pluginRepositories>
 		<pluginRepository>
-			<id>Codehaus Snapshot</id>
-			<url>https://nexus.codehaus.org/content/repositories/codehaus-snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</pluginRepository>
-		<pluginRepository>
-			<id>Codehaus</id>
-			<url>https://nexus.codehaus.org/content/repositories/releases/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</pluginRepository>
-		<pluginRepository>
 			<id>reflections-repo</id>
 			<name>Reflections Maven2 Repository</name>
 			<url>http://reflections.googlecode.com/svn/repo</url>
 		</pluginRepository>
 	</pluginRepositories>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>org.lsc</groupId>
 			<artifactId>lsc-core</artifactId>
-			<version>2.1.0</version>
+			<version>2.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
