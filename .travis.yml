@@ -5,6 +5,10 @@ jdk:
   - oraclejdk7
   - openjdk7
 
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y ldap-utils
+
 script: mvn -Popendj test -B
 
 notifications:
