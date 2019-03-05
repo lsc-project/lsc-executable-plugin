@@ -132,11 +132,7 @@ public abstract class AbstractExecutableLdifService implements IService {
             outputStream.flush();
             outputStream.close();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                datas.append(line + System.getProperty("line.separator"));
-            }
+            datas.append(IOUtils.toString(p.getInputStream()));
 
             //TODO: need to check for max time
             LOGGER.debug("Waiting for command to stop ... ");
