@@ -1,6 +1,8 @@
 package org.lsc.plugins.connectors.executable;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -130,25 +132,19 @@ public abstract class AbstractExecutableLdifService implements IService {
             outputStream.flush();
             outputStream.close();
 
+            datas.append(IOUtils.toString(p.getInputStream()));
+
             //TODO: need to check for max time
             LOGGER.debug("Waiting for command to stop ... ");
 
             p.waitFor();
         } catch (IOException e) {
             // Encountered an error while reading data from output
-            LOGGER.error("Encountered an I/O exception while writing data to script {}", runtime);
+            LOGGER.error("Encountered an I/O exception while writing/reading data to/from script {}", runtime);
             LOGGER.error(e.toString(), e);
         } catch (InterruptedException e) {
             // Encountered an interruption
             LOGGER.error("Script {} interrupted", runtime);
-            LOGGER.debug(e.toString(), e);
-        }
-
-        try {
-        	datas.append(IOUtils.toString(p.getInputStream()));
-        } catch (IOException e) {
-            // Failing to read the complete string causes null return
-            LOGGER.error("Fail to read complete data from script output stream: {}", runtime);
             LOGGER.debug(e.toString(), e);
         }
 
