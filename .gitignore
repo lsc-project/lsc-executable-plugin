@@ -1,0 +1,5 @@
+.classpath
+.project
+.settings/
+src/main/java/org/lsc/plugins/connectors/executable/generated/
+target/
