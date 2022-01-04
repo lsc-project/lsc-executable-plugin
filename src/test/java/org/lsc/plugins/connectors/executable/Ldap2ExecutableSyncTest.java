@@ -317,6 +317,16 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		assertFalse(dstJndiServices.exists(DN_DELETE_DST));
 	}
 
+	public final void testFailOnBadExitCode() throws Exception {
+		// Clean should fail
+		SimpleSynchronize sync = new SimpleSynchronize();
+		List<String> cleanType = new ArrayList<String>();
+		cleanType.add("failOnErrorTestTask");
+		sync.setThreads(1);
+		boolean ret = sync.launch(new ArrayList<String>(), new ArrayList<String>(), cleanType);
+		assertFalse(ret);
+		
+	}
 	private void launchSyncCleanTask(String taskName, boolean doSync,
 					boolean doClean) throws Exception {
 		// initialize required stuff

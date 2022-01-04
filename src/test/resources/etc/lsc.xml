@@ -29,6 +29,12 @@
 			<factory>com.sun.jndi.ldap.LdapCtxFactory</factory>
 			<tlsActivated>false</tlsActivated>
 		</ldapConnection>
+		<pluginConnection>
+			<name>executable</name>
+			<url>fake</url>
+			<username>fake</username>
+			<password>fake</password>
+		</pluginConnection>
 	</connections>
 	<tasks>
 		<task>
@@ -157,6 +163,67 @@
 						<string>"ok@domain.net"</string>
 					</createValues>
 				</dataset>
+			</propertiesBasedSyncOptions>
+		</task>
+		<task>
+			<name>failOnErrorTestTask</name>
+			<bean>org.lsc.beans.SimpleBean</bean>
+			<pluginSourceService implementationClass="org.lsc.plugins.connectors.executable.ExecutableLdifSourceService">
+				<name>failOnErrorTestTask-src-service</name>
+				<connection reference="executable" />
+				<exec:executableLdifSourceServiceSettings>
+					<name>failOnErrorTestTask-src-service-exec</name>
+					<connection reference="executable" />
+					<exec:listScript>src/test/resources/org/lsc/plugins/connectors/executable/list.sh</exec:listScript>
+					<exec:getScript>src/test/resources/org/lsc/plugins/connectors/executable/get-bad-return-code.sh</exec:getScript>
+					<exec:variables>
+						<entry><key>LDAP_BIND_DN</key><value>cn=Directory Manager</value></entry>
+						<entry><key>LDAP_BIND_PW</key><value>secret</value></entry>
+						<entry><key>LDAP_URL</key><value>ldap://localhost:33389</value></entry>
+						<entry><key>LDAP_BASE</key><value>ou=ldap2ldap2TestTaskSrc,ou=Test Data,dc=lsc-project,dc=org</value></entry>
+						<entry><key>LDAP_SCOPE</key><value>sub</value></entry>
+					</exec:variables>
+				</exec:executableLdifSourceServiceSettings>
+			</pluginSourceService>
+			<pluginDestinationService
+				implementationClass="org.lsc.plugins.connectors.executable.ExecutableLdapDestinationService">
+				<name>failOnErrorTestTask-dst-service</name>
+				<connection reference="ldap-dst-conn" />
+				<exec:executableLdapDestinationServiceSettings>
+					<name>failOnErrorTestTask-dst-service-exec</name>
+					<connection reference="ldap-dst-conn" />
+					<baseDn>ou=ldap2ldap2TestTaskDst,ou=Test Data,dc=lsc-project,dc=org</baseDn>
+					<pivotAttributes>
+						<string>sn</string>
+					</pivotAttributes>
+					<fetchedAttributes>
+						<string>description</string>
+						<string>cn</string>
+						<string>sn</string>
+						<string>userPassword</string>
+						<string>objectClass</string>
+						<string>uid</string>
+						<string>mail</string>
+						<string>telephoneNumber</string>
+						<string>seeAlso</string>
+					</fetchedAttributes>
+					<getAllFilter>(objectClass=person)</getAllFilter>
+					<getOneFilter>(&amp;(objectClass=person)(sn={sn}))</getOneFilter>
+					<exec:addScript>src/test/resources/org/lsc/plugins/connectors/executable/add.sh</exec:addScript>
+					<exec:updateScript>src/test/resources/org/lsc/plugins/connectors/executable/update.sh</exec:updateScript>
+					<exec:removeScript>src/test/resources/org/lsc/plugins/connectors/executable/delete.sh</exec:removeScript>
+					<exec:renameScript>src/test/resources/org/lsc/plugins/connectors/executable/rename.sh</exec:renameScript>
+					<exec:variables>
+						<entry><key>LDAP_BIND_DN</key><value>cn=Directory Manager</value></entry>
+						<entry><key>LDAP_BIND_PW</key><value>secret</value></entry>
+						<entry><key>LDAP_URL</key><value>ldap://localhost:33389</value></entry>
+					</exec:variables>
+				</exec:executableLdapDestinationServiceSettings>
+			</pluginDestinationService>
+			<propertiesBasedSyncOptions>
+				<mainIdentifier>js:"cn=" + srcBean.getDatasetFirstValueById("cn") + ",ou=ldap2ldap2TestTaskDst,ou=Test Data,dc=lsc-project,dc=org"</mainIdentifier>
+				<defaultDelimiter>,</defaultDelimiter>
+				<defaultPolicy>KEEP</defaultPolicy>
 			</propertiesBasedSyncOptions>
 		</task>
 	</tasks>
