@@ -97,9 +97,13 @@ public abstract class AbstractExecutableLdifService implements IService {
         return execute(runtime, env, input, datas);
     }
 
-    public String executeWithReturn(String[] runtime, String[] env, String input) {
+    public String executeWithReturn(String[] runtime, String[] env, String input) throws LscServiceException {
         StringBuffer datas = new StringBuffer();
-        execute(runtime, env, input, datas);
+        int exitValue = execute(runtime, env, input, datas);
+        if (exitValue != 0) {
+            String message = "Process returned a non zero exit code, exit code=" + exitValue;
+            throw new LscServiceException(message, new RuntimeException(message));
+        }
         return datas.toString();
     }
 
