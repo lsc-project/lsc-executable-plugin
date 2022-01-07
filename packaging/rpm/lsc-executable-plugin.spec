@@ -5,14 +5,14 @@
 #
 # BSD License
 #
-# Copyright (c) 2009 - 2014 LSC Project
+# Copyright (c) 2009 - 2021 LSC Project
 #=================================================
 
 #=================================================
 # Variables
 #=================================================
 %define lsc_executable_name	lsc-executable-plugin
-%define lsc_executable_version	1.0
+%define lsc_executable_version	1.1
 %define lsc_min_version		2.1.0
 %define lsc_user		lsc
 %define lsc_group		lsc
@@ -28,7 +28,7 @@ License: BSD
 BuildArch: noarch
 
 Group: Applications/System
-URL: http://lsc-project.org
+URL: https://lsc-project.org
 
 Source: %{lsc_executable_name}-%{lsc_executable_version}.jar
 Source1: lsc-executable-add-modify-delete-modrdn.pl
@@ -80,5 +80,7 @@ rm -rf %{buildroot}
 # Changelog
 #=================================================
 %changelog
+* Fri Jan 07 2021 - Clement Oudot <clem@lsc-project.org> - 1.1-0
+- Upgrade to 1.1
 * Tue Mar 04 2014 - Clement Oudot <clem@lsc-project.org> - 1.0-0
 - First package for LSC Executable plugin
