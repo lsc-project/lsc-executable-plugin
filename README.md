@@ -25,7 +25,7 @@ The design of a destination connector requires 4 more scripts :
 
 There are two different destination connectors:
 
-* Executable LDAP destination service: LIST and GET operations are done with LDAP destination service (see LSC main documentation about *LDAP destination service*)
+* Executable LDAP destination service: LIST and GET operations are done with LDAP destination service (see LSC main documentation about **LDAP destination service**)
 * Executable LDIF destination service: LIST and GET operations are done by scripts, like the one used in Executable LDIF source service
 
 Installation
@@ -127,7 +127,7 @@ The configuration part of the destination service is:
 </pluginDestinationService>
 ```
 
-> **_NOTE:_** Here the connection do not refer to fake plugin connection, but to a LDAP connection. (see LSC main documentation about *LDAP connection*)
+> **_NOTE:_** Here the connection do not refer to fake plugin connection, but to a LDAP connection. (see LSC main documentation about **LDAP connection**)
 
 Parameters are:
 
@@ -136,7 +136,7 @@ Parameters are:
 * `removeScript`: Path to the script used to remove an entry. The script must be executable.
 * `renameScript`: Path to the script used to rename an entry. The script must be executable.
 * `variables`: allow to define variables that will be passed as environment variables to scripts.
-* `Other parameters`: see LSC main documentation about *LDAP destination service*.
+* `Other parameters`: see LSC main documentation about **LDAP destination service**.
 
 Executable LDIF Destination Service
 -----------------------------------
