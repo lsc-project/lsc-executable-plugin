@@ -36,7 +36,7 @@ Declare each needed script in Executable service section:
 Variables
 ---------
 
-Use plugin service variables to declare the LDAP parameters variables:
+Use plugin service variables to declare the LDAP parameters:
 
 ```
   <exec:variables>
