@@ -8,7 +8,7 @@
 	<version>1.2</version>
 	<description>
 	This project provides a Executable source / destination plugin for LSC
-    </description>
+	</description>
 	<url>http://lsc-project.org/</url>
 	<issueManagement>
 		<system>Redmine</system>
@@ -35,12 +35,11 @@
 			<url>http://www.opensource.org/licenses/bsd-license.php</url>
 		</license>
 	</licenses>
-
-	<scm>
-		<connection>scm:svn:https://lsc-project.org/svn/plugins/trunk/connectors/executable</connection>
-		<developerConnection>scm:svn:svn+ssh://login@lsc-project.org/var/lib/svn/plugins/trunk/connectors/executable</developerConnection>
-		<url>http://tools.lsc-project.org/repositories/browse/lsc/plugins/trunk/connectors/executable</url>
-	</scm>
+	<properties>
+		<compiler.dir>${project.build.directory}/lib-compiler</compiler.dir>
+		<graalvm.version>23.1.6</graalvm.version>
+		<graalvm.opts>-XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI --module-path=${compiler.dir} --upgrade-module-path=${compiler.dir}/compiler-${graalvm.version}.jar${path.separator}${compiler.dir}/compiler-management-${graalvm.version}.jar</graalvm.opts>
+	</properties>
 
 	<build>
 		<defaultGoal>package</defaultGoal>
@@ -48,39 +47,13 @@
 		<finalName>lsc-executable-plugin-${project.version}</finalName>
 
 		<plugins>
-            <plugin>
-            <!--
-            Quickfix so the maven-jaxb2-plugin is JDK 8 compatible
-            See https://java.net/jira/browse/MAVEN_JAXB2_PLUGIN-80.
-            Please remove this when jaxb plugins is upgraded to 0.9.0+
-            -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>1.0-alpha-2</version>
-                <executions>
-                    <execution>
-                        <id>set-additional-system-properties</id>
-                        <goals>
-                            <goal>set-system-properties</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <properties>
-                        <property>
-                            <name>javax.xml.accessExternalSchema</name>
-                            <value>file,http</value>
-                        </property>
-                    </properties>
-                </configuration>
-            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.13.0</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>21</source>
+					<target>21</target>
 					<encoding>utf-8</encoding>
 				</configuration>
 				<executions>
@@ -95,7 +68,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.4.3</version>
+				<version>3.3.1</version>
 				<configuration>
 					<encoding>utf-8</encoding>
 				</configuration>
@@ -103,13 +76,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.8</version>
+				<version>3.11.2</version>
 				<configuration>
 					<show>public</show>
-					<links>
-						<link>http://java.sun.com/j2se/1.6.0/docs/api/</link>
-					</links>
 					<encoding>utf-8</encoding>
+					<doclint>none</doclint>
 				</configuration>
 				<executions>
 					<execution>
@@ -117,16 +88,13 @@
 						<goals>
 							<goal>javadoc</goal>
 						</goals>
-						<configuration>
-							<additionalparam>-Xdoclint:none</additionalparam>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.jvnet.jaxb2.maven2</groupId>
 				<artifactId>maven-jaxb2-plugin</artifactId>
-				<version>0.8.3</version>
+				<version>0.15.3</version>
 				<executions>
 					<execution>
 						<goals>
@@ -158,34 +126,82 @@
 				</dependencies>
 			</plugin>
 			<plugin>
-				<groupId>org.reflections</groupId>
-				<artifactId>reflections-maven</artifactId>
-				<version>0.9.9-RC1</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-simple</artifactId>
-						<version>1.7.5</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<goals>
-							<goal>reflections</goal>
-						</goals>
-						<phase>process-classes</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.10</version>
+				<version>3.5.2</version>
 				<configuration>
 					<systemPropertyVariables>
 						<LSC.PLUGINS.PACKAGEPATH>org.lsc.plugins.connectors.executable.generated</LSC.PLUGINS.PACKAGEPATH>
 					</systemPropertyVariables>
+					<argLine>
+						${graalvm.opts}
+					</argLine>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.8.1</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>process-test-classes</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.graalvm.sdk</groupId>
+									<artifactId>collections</artifactId>
+									<version>${graalvm.version}</version>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.graalvm.sdk</groupId>
+									<artifactId>word</artifactId>
+									<version>${graalvm.version}</version>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.graalvm.truffle</groupId>
+									<artifactId>truffle-api</artifactId>
+									<version>${graalvm.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.graalvm.truffle</groupId>
+									<artifactId>truffle-compiler</artifactId>
+									<version>${graalvm.version}</version>
+									<type>jar</type>
+									</artifactItem>
+								<artifactItem>
+									<groupId>org.graalvm.compiler</groupId>
+									<artifactId>compiler</artifactId>
+									<version>${graalvm.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.graalvm.compiler</groupId>
+									<artifactId>compiler-management</artifactId>
+									<version>${graalvm.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.graalvm.polyglot</groupId>
+									<artifactId>polyglot</artifactId>
+									<version>${graalvm.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${compiler.dir}</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -274,7 +290,7 @@
 				<dependency>
 					<groupId>org.forgerock.ce.opendj</groupId>
 					<artifactId>opendj-server</artifactId>
-					<version>2.6.2</version>
+					<version>2.6.4</version>
 					<scope>compile</scope>
 				</dependency>
 			</dependencies>
@@ -283,7 +299,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
-						<version>1.7</version>
+						<version>3.6.0</version>
 						<executions>
 							<execution>
 								<id>add-source</id>
@@ -316,16 +332,16 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.3</version><!--$NO-MVN-MAN-VER$ -->
+						<version>3.1.0</version><!--$NO-MVN-MAN-VER$ -->
 						<executions>
 							<execution>
 								<id>startLdapServer</id>
 								<phase>test-compile</phase>
 								<configuration>
-									<tasks unless="maven.test.skip">
+									<target unless="maven.test.skip">
 										<property name="execution.path" refid="maven.runtime.classpath" />
 										<ant antfile="${basedir}/misc/build-runldap.xml" target="startLdapServer" />
-									</tasks>
+									</target>
 								</configuration>
 								<goals>
 									<goal>run</goal>
@@ -335,11 +351,11 @@
 								<id>stopLdapServer</id>
 								<phase>test</phase>
 								<configuration>
-									<tasks unless="maven.test.skip">
+									<target unless="maven.test.skip">
 										<property name="execution.path" refid="maven.runtime.classpath" />
 										<property name="plugin.path" refid="maven.plugin.classpath" />
 										<ant antfile="${basedir}/misc/build-runldap.xml" target="stopLdapServer" />
-									</tasks>
+									</target>
 								</configuration>
 								<goals>
 									<goal>run</goal>
@@ -357,11 +373,11 @@
 			<id>lsc-site</id>
 			<url>http://lsc-project.org/maven</url>
 		</repository>
-                <repository>
-                        <id>forgerock-community-repository</id>
-                        <name>ForgeRock CommunityRepository</name>
-                        <url>http://maven.forgerock.org/repo/community</url>
-                </repository>
+		<repository>
+			<id>forgerock-community-repository</id>
+			<name>ForgeRock CommunityRepository</name>
+			<url>https://maven.forgerock.org/artifactory/community</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -376,7 +392,52 @@
 		<dependency>
 			<groupId>org.lsc</groupId>
 			<artifactId>lsc-core</artifactId>
-			<version>2.1-SNAPSHOT</version>
+			<version>2.2.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<type>jar</type>
+			<optional>false</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.graalvm.polyglot</groupId>
+			<artifactId>polyglot</artifactId>
+			<version>${graalvm.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.graalvm.js</groupId>
+			<artifactId>js-scriptengine</artifactId>
+			<version>${graalvm.version}</version>
+		</dependency>
+		<!-- runtime -->
+		<dependency>
+			<groupId>org.graalvm.polyglot</groupId>
+			<artifactId>js-community</artifactId>
+			<version>${graalvm.version}</version>
+			<type>pom</type>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.graalvm.polyglot</groupId>
+			<artifactId>profiler-community</artifactId>
+			<version>${graalvm.version}</version>
+			<type>pom</type>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.graalvm.polyglot</groupId>
+			<artifactId>inspect-community</artifactId>
+			<version>${graalvm.version}</version>
+			<type>pom</type>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 

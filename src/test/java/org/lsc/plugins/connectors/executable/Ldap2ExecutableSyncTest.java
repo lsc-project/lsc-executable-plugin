@@ -104,7 +104,7 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 	
 	@BeforeClass
 	public void setUp() throws LscConfigurationException {
-        LscConfiguration.loadFromInstance(new JaxbXmlConfigurationHelper().getConfiguration(this.getClass().getClassLoader().getResource("etc/" + JaxbXmlConfigurationHelper.LSC_CONF_XML).getPath()));
+        LscConfiguration.loadFromInstance(new JaxbXmlConfigurationHelper().getConfiguration(this.getClass().getClassLoader().getResource("etc/" + JaxbXmlConfigurationHelper.LSC_CONF_XML).getPath(), System.getenv()));
         reloadJndiConnections();
 	}
 
@@ -324,7 +324,9 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 		cleanType.add("failOnErrorTestTask");
 		sync.setThreads(1);
 		boolean ret = sync.launch(new ArrayList<String>(), new ArrayList<String>(), cleanType);
-		assertFalse(ret);
+		// Assert true: even if each entry fails to synchronize,
+		// the number of launched tasks = 1, so the result of launch() is true
+		assertTrue(ret);
 		
 	}
 	private void launchSyncCleanTask(String taskName, boolean doSync,

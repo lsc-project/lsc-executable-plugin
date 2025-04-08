@@ -33,7 +33,11 @@
         
 		<forget daemon="true">
 			<java classname="org.lsc.opendj.LdapServer" classpath="${build.classes.dir}:${build.test-classes.dir}:${execution.path}" fork="true" maxmemory="512M" dir="${build.test-classes.dir}">
-				<arg line="-a" />
+				<jvmarg value="--add-exports"/>
+				<jvmarg value="java.base/sun.security.tools.keytool=ALL-UNNAMED"/>
+				<jvmarg value="--add-exports"/>
+				<jvmarg value="java.base/sun.security.x509=ALL-UNNAMED"/>
+				<arg line="-a"></arg>
 			</java>
 		</forget>
 		<waitfor maxwait="100" maxwaitunit="second" checkevery="5" checkeveryunit="second">
