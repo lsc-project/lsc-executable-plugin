@@ -1,3 +1,9 @@
+lsc-executable-plugin (1.2-1) unstable; urgency=low
+
+  * Upgrade to 1.2
+
+ -- Clement Oudot (LSC-project) <clem.oudot@gmail.com>  Mon, 14 Apr 2025 12:00:00 +0100
+
 lsc-executable-plugin (1.1-1) unstable; urgency=low
 
   * Upgrade to 1.1
