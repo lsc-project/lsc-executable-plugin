@@ -82,7 +82,7 @@ rm -rf %{buildroot}
 %changelog
 * Mon Apr 14 2025 - Clement Oudot <clem@lsc-project.org> - 1.2-0
 - Upgrade to 1.2
-* Fri Jan 07 2021 - Clement Oudot <clem@lsc-project.org> - 1.1-0
+* Thu Jan 07 2021 - Clement Oudot <clem@lsc-project.org> - 1.1-0
 - Upgrade to 1.1
 * Tue Mar 04 2014 - Clement Oudot <clem@lsc-project.org> - 1.0-0
 - First package for LSC Executable plugin
