@@ -23,7 +23,7 @@
 Summary: LSC Executable plugin
 Name: %{lsc_executable_name}
 Version: %{lsc_executable_version}
-Release: 0%{?dist}
+Release: 1%{?dist}
 License: BSD
 BuildArch: noarch
 
@@ -80,7 +80,7 @@ rm -rf %{buildroot}
 # Changelog
 #=================================================
 %changelog
-* Mon Apr 14 2025 - Clement Oudot <clem@lsc-project.org> - 1.2-0
+* Mon Apr 14 2025 - Clement Oudot <clem@lsc-project.org> - 1.2-1
 - Upgrade to 1.2
 * Thu Jan 07 2021 - Clement Oudot <clem@lsc-project.org> - 1.1-0
 - Upgrade to 1.1
