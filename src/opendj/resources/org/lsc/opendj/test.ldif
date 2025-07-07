@@ -226,3 +226,24 @@ objectClass: organizationalPerson
 objectClass: person
 objectClass: top
 
+# LDAP 2 ExecutableLdif Source
+
+dn: ou=ldap2executableLdifTestTaskSrc,ou=Test Data,dc=lsc-project,dc=org
+ou: ldap2executable2TestTaskSrc
+objectClass: organizationalUnit
+objectClass: top
+
+dn: ou=ldap2executableLdifTestTaskDst,ou=Test Data,dc=lsc-project,dc=org
+ou: ldap2executableLdifTestTaskDst
+objectClass: organizationalUnit
+objectClass: top
+
+dn: uid=0001,ou=ldap2executableLdifTestTaskSrc,ou=Test Data,dc=lsc-project,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: CN0001
+mail: 0001@domain.com
+sn: SN0001
+uid: 0001

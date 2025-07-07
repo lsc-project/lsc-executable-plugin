@@ -29,6 +29,19 @@
 			<factory>com.sun.jndi.ldap.LdapCtxFactory</factory>
 			<tlsActivated>false</tlsActivated>
 		</ldapConnection>
+		<ldapConnection>
+			<name>executable-ldap-src-conn</name>
+			<url>ldap://localhost:33389</url>
+			<username>cn=Directory Manager</username>
+			<password>secret</password>
+			<authentication>SIMPLE</authentication>
+			<referral>IGNORE</referral>
+			<derefAliases>NEVER</derefAliases>
+			<version>VERSION_3</version>
+			<pageSize>-1</pageSize>
+			<factory>com.sun.jndi.ldap.LdapCtxFactory</factory>
+			<tlsActivated>false</tlsActivated>
+		</ldapConnection>
 		<pluginConnection>
 			<name>executable</name>
 			<url>fake</url>
@@ -224,6 +237,100 @@
 				<mainIdentifier>"cn=" + srcBean.getDatasetFirstValueById("cn") + ",ou=ldap2ldap2TestTaskDst,ou=Test Data,dc=lsc-project,dc=org"</mainIdentifier>
 				<defaultDelimiter>,</defaultDelimiter>
 				<defaultPolicy>KEEP</defaultPolicy>
+			</propertiesBasedSyncOptions>
+		</task>
+		<task>
+			<name>ldap2executableLdifTestTask</name>
+			<bean>org.lsc.beans.SimpleBean</bean>
+			<asyncLdapSourceService>
+				<name>ldap2executableLdifTestTask-src</name>
+				<connection reference="executable-ldap-src-conn" />
+				<baseDn>ou=ldap2executableLdifTestTaskSrc,ou=Test Data,dc=lsc-project,dc=org</baseDn>
+				<pivotAttributes>
+					<string>uid</string>
+				</pivotAttributes>
+				<fetchedAttributes>
+					<string>cn</string>
+					<string>mail</string>
+					<string>sn</string>
+					<string>uid</string>
+				</fetchedAttributes>
+				<getAllFilter>(&amp;(uid=*))</getAllFilter>
+				<getOneFilter>(uid={uid})</getOneFilter>
+				<cleanFilter>(uid={uid})</cleanFilter>
+				<serverType>OpenDS</serverType>
+			</asyncLdapSourceService>
+			<pluginDestinationService implementationClass="org.lsc.plugins.connectors.executable.ExecutableLdifDestinationService">
+				<name>ldap2executableLdifTestTask-dst</name>
+				<connection reference="executable" />
+				<exec:executableLdifDestinationServiceSettings>
+					<name>executableLdifDestinationServiceSettings</name>
+					<connection reference="executable" />
+					<exec:listScript>src/test/resources/org/lsc/plugins/connectors/executable/executableldif-list.sh</exec:listScript>
+					<exec:getScript>src/test/resources/org/lsc/plugins/connectors/executable/executableldif-get.sh</exec:getScript>
+					<exec:addScript>src/test/resources/org/lsc/plugins/connectors/executable/executableldif-add.sh</exec:addScript>
+					<exec:updateScript>src/test/resources/org/lsc/plugins/connectors/executable/executableldif-update.sh</exec:updateScript>
+					<exec:removeScript>src/test/resources/org/lsc/plugins/connectors/executable/executableldif-delete.sh</exec:removeScript>
+					<exec:renameScript>src/test/resources/org/lsc/plugins/connectors/executable/executableldif-rename.sh</exec:renameScript>
+					<exec:variables>
+						<entry><key>LDAP_BIND_DN</key><value>cn=Directory Manager</value></entry>
+						<entry><key>LDAP_BIND_PW</key><value>secret</value></entry>
+						<entry><key>LDAP_URL</key><value>ldap://localhost:33389</value></entry>
+						<entry><key>LDAP_BASE</key><value>ou=ldap2executableLdifTestTaskDst,ou=Test Data,dc=lsc-project,dc=org</value></entry>
+						<entry><key>LDAP_SCOPE</key><value>sub</value></entry>
+					</exec:variables>
+
+					<exec:fetchedAttributes>
+						<string>cn</string>
+						<string>mail</string>
+						<string>objectClass</string>
+						<string>sn</string>
+						<string>uid</string>
+					</exec:fetchedAttributes>
+				</exec:executableLdifDestinationServiceSettings>
+			</pluginDestinationService>
+			<propertiesBasedSyncOptions>
+				<mainIdentifier>"uid=" + srcBean.getDatasetFirstValueById("uid") + ",ou=ldap2executableLdifTestTaskDst,ou=Test Data,dc=lsc-project,dc=org"</mainIdentifier>
+				<defaultDelimiter>,</defaultDelimiter>
+				<defaultPolicy>FORCE</defaultPolicy>
+				<dataset>
+					<name>cn</name>
+					<policy>FORCE</policy>
+					<forceValues>
+						<string>srcBean.getDatasetFirstValueById("cn")</string>
+					</forceValues>
+				</dataset>
+				<dataset>
+					<name>mail</name>
+					<policy>FORCE</policy>
+					<forceValues>
+						<string>"ok@domain.net"</string>
+					</forceValues>
+				</dataset>
+				<dataset>
+					<name>objectClass</name>
+					<policy>KEEP</policy>
+					<createValues>
+						<string>"inetOrgPerson"</string>
+						<string>"organizationalPerson"</string>
+						<string>"person"</string>
+						<string>"top"</string>
+					</createValues>
+				</dataset>
+				<dataset>
+					<name>sn</name>
+					<policy>FORCE</policy>
+					<forceValues>
+						<string>srcBean.getDatasetFirstValueById("sn")</string>
+					</forceValues>
+				</dataset>
+				<dataset>
+					<name>uid</name>
+					<policy>FORCE</policy>
+					<forceValues>
+						<string>srcBean.getDatasetFirstValueById("uid")</string>
+					</forceValues>
+				</dataset>
 			</propertiesBasedSyncOptions>
 		</task>
 	</tasks>
