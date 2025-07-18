@@ -1,9 +1,5 @@
 # Executable LSC Plugin
 
-[![Build Status](https://travis-ci.org/lsc-project/lsc-executable-plugin.svg?branch=master)](https://travis-ci.org/lsc-project/lsc-executable-plugin)
-
-> **_NOTE:_** Plugin version: 1.0, Minimal required LSC version: 2.1
-
 Presentation
 ============
 
@@ -41,9 +37,9 @@ XML namespace
 
 You need to adapt the namespace of the main markup to import `exec` namespace:
 
-```
+```xml
 <?xml version="1.0" ?>
-<lsc xmlns="http://lsc-project.org/XSD/lsc-core-2.1.xsd" xmlns:exec="http://lsc-project.org/XSD/lsc-executable-plugin-1.0.xsd" revision="0">
+<lsc xmlns="http://lsc-project.org/XSD/lsc-core-2.2.xsd" xmlns:exec="http://lsc-project.org/XSD/lsc-executable-plugin-1.0.xsd" revision="0">
 ...
 </lsc>
 ```
@@ -53,7 +49,7 @@ Connection
 
 You need to define a fake connection for the plugin:
 
-```
+```xml
     <pluginConnection>
       <name>executable</name>
       <url>fake</url>
@@ -67,7 +63,7 @@ Executable LDIF Source Service
 
 The configuration part of the source service is:
 
-```
+```xml
       <pluginSourceService implementationClass="org.lsc.plugins.connectors.executable.ExecutableLdifSourceService">
         <name>user-src-service</name>
         <connection reference="executable" />
@@ -95,7 +91,7 @@ Executable LDAP Destination Service
 
 The configuration part of the destination service is:
 
-```
+```xml
 <pluginDestinationService implementationClass="org.lsc.plugins.connectors.executable.ExecutableLdapDestinationService">
   <name>user-dst-service</name>
   <connection reference="openldap" />
@@ -143,7 +139,7 @@ Executable LDIF Destination Service
 
 The configuration part of the destination service is:
 
-```
+```xml
 <pluginDestinationService implementationClass="org.lsc.plugins.connectors.executable.ExecutableLdifDestinationService">
   <name>user-dst-service</name>
   <connection reference="executable" />
@@ -185,7 +181,7 @@ Plugin loading
 
 To load the plugin into LSC, you need to modify `JAVA_OPTS`:
 
-```
+```xml
 JAVA_OPTS="-DLSC.PLUGINS.PACKAGEPATH=org.lsc.plugins.connectors.executable.generated"
 ```
 
