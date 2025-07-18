@@ -1,5 +1,7 @@
 # Executable LSC Plugin
 
+[![Build Status](https://github.com/lsc-project/lsc-executable-plugin/actions/workflows/maven.yml/badge.svg)](https://github.com/lsc-project/lsc-executable-plugin/actions/workflows/maven.yml)
+
 Presentation
 ============
 
