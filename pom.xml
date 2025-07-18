@@ -9,10 +9,10 @@
 	<description>
 	This project provides a Executable source / destination plugin for LSC
 	</description>
-	<url>http://lsc-project.org/</url>
+	<url>https://lsc-project.org/</url>
 	<issueManagement>
-		<system>Redmine</system>
-		<url>http://tools.lsc-project.org/</url>
+		<system>Github</system>
+		<url>https://github.com/lsc-project/lsc-executable-plugin/</url>
 	</issueManagement>
 	<inceptionYear>2010</inceptionYear>
 	<developers>
@@ -371,7 +371,7 @@
 	<repositories>
 		<repository>
 			<id>lsc-site</id>
-			<url>http://lsc-project.org/maven</url>
+			<url>https://lsc-project.org/maven</url>
 		</repository>
 		<repository>
 			<id>forgerock-community-repository</id>
