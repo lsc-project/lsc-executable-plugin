@@ -78,9 +78,12 @@ cp -a %{SOURCE3} %{buildroot}/var/lib/lsc
 * Mon Jul 21 2025 - Clement Oudot <clem@lsc-project.org> - 1.3-1
 - Upgrade to 1.3
 - fix value comparison + add unit test for executableLdifDestinationService task
+
 * Mon Apr 14 2025 - Clement Oudot <clem@lsc-project.org> - 1.2-1
 - Upgrade to 1.2
+
 * Thu Jan 07 2021 - Clement Oudot <clem@lsc-project.org> - 1.1-0
 - Upgrade to 1.1
+
 * Tue Mar 04 2014 - Clement Oudot <clem@lsc-project.org> - 1.0-0
 - First package for LSC Executable plugin
