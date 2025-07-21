@@ -16,7 +16,7 @@ Summary: LSC Executable plugin
 Name: lsc-executable-plugin
 Version: 1.3
 Release: 1%{?dist}
-License: BSD
+License: BSD-3-Clause
 BuildArch: noarch
 
 URL: https://lsc-project.org
