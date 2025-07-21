@@ -36,8 +36,6 @@ This is an Executable plugin for LSC.
 
 %install
 
-rm -rf %{buildroot}
-
 # Create directories
 mkdir -p %{buildroot}/usr/%{_lib}/lsc
 mkdir -p %{buildroot}/var/lib/lsc
