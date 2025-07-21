@@ -22,6 +22,7 @@ Source2: lsc-executable-csv2ldif-get.pl
 Source3: lsc-executable-csv2ldif-list.pl
 
 BuildArch: noarch
+BuildRequires: perl-generators
 Requires: lsc >= %{lsc_min_version}
 
 %description
