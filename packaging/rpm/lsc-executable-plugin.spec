@@ -50,8 +50,11 @@ install -m 0755 scripts/lsc-executable*.pl \
 
 
 %files
-/usr/%{_lib}/lsc/lsc-executable-plugin*
-/var/lib/lsc/lsc-executable*
+%license LICENSE.txt
+%doc README.md doc/
+%{_libdir}/lsc/lsc-executable-plugin*
+%{_localstatedir}/lib/lsc/lsc-executable*.pl
+
 
 %changelog
 * Mon Jul 21 2025 - Clement Oudot <clem@lsc-project.org> - 1.3-1
