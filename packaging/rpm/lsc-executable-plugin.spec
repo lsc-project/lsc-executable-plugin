@@ -7,8 +7,7 @@
 #
 # Copyright (c) 2009 - 2021 LSC Project
 #=================================================
-
-%define lsc_min_version		2.2
+%global lsc_min_version		2.2
 
 Name: lsc-executable-plugin
 Version: 1.3
