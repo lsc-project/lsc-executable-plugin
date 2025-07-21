@@ -27,14 +27,12 @@ Release: 1%{?dist}
 License: BSD
 BuildArch: noarch
 
-Group: Applications/System
 URL: https://lsc-project.org
 
 Source: %{lsc_executable_name}-%{lsc_executable_version}.jar
 Source1: lsc-executable-add-modify-delete-modrdn.pl
 Source2: lsc-executable-csv2ldif-get.pl
 Source3: lsc-executable-csv2ldif-list.pl
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires(pre): coreutils
 Requires: lsc >= %{lsc_min_version}
@@ -68,11 +66,8 @@ cp -a %{SOURCE3} %{buildroot}/var/lib/lsc
 
 %postun
 
-%clean
-rm -rf %{buildroot}
 
 %files
-%defattr(-, root, root, 0755)
 /usr/%{_lib}/lsc/lsc-executable-plugin*
 /var/lib/lsc/lsc-executable*
 
