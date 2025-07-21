@@ -9,8 +9,6 @@
 #=================================================
 
 %define lsc_min_version		2.2
-%define lsc_user		lsc
-%define lsc_group		lsc
 
 Name: lsc-executable-plugin
 Version: 1.3
@@ -46,13 +44,9 @@ cp -a %{SOURCE1} %{buildroot}/var/lib/lsc
 cp -a %{SOURCE2} %{buildroot}/var/lib/lsc
 cp -a %{SOURCE3} %{buildroot}/var/lib/lsc
 
-%post
-
-/bin/chown -R %{lsc_user}:%{lsc_group} /usr/%{_lib}/lsc 
-/bin/chown -R %{lsc_user}:%{lsc_group} /var/lib/lsc 
 
 
-%postun
+
 
 
 %files
