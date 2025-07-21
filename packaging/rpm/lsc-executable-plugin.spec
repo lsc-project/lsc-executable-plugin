@@ -9,49 +9,78 @@
 #=================================================
 %global lsc_min_version		2.2
 
+%bcond build_from_sources 0
+%bcond tests              0
+
 Name: lsc-executable-plugin
 Version: 1.3
 Release: 1%{?dist}
 Summary: LSC Executable plugin
 License: BSD-3-Clause
 URL: https://lsc-project.org
-
-Source: %{lsc_executable_name}-%{lsc_executable_version}.jar
-Source1: lsc-executable-add-modify-delete-modrdn.pl
-Source2: lsc-executable-csv2ldif-get.pl
-Source3: lsc-executable-csv2ldif-list.pl
-
+%if %{with build_from_sources}
+Source0: https://github.com/lsc-project/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
+%else
+Source1: https://www.lsc-project.org/archives/lsc-executable-plugin-%{version}.jar
+Source2: https://raw.githubusercontent.com/lsc-project/%{name}/refs/tags/v%{version}/scripts/lsc-executable-add-modify-delete-modrdn.pl
+Source3: https://raw.githubusercontent.com/lsc-project/%{name}/refs/tags/v%{version}/scripts/lsc-executable-csv2ldif-get.pl
+Source4: https://raw.githubusercontent.com/lsc-project/%{name}/refs/tags/v%{version}/scripts/lsc-executable-csv2ldif-list.pl
+%endif
 BuildArch: noarch
+
+BuildRequires: coreutils
+%if %{with build_from_sources}
+BuildRequires: jpackage-utils
+BuildRequires: java-devel >= 1:21
+BuildRequires: maven
+BuildRequires: maven-local
+%endif
 BuildRequires: perl-generators
 Requires: lsc >= %{lsc_min_version}
+
 
 %description
 This is an Executable plugin for LSC.
 
+
 %prep
+%if %{with build_from_sources}
+%setup -q
+%endif
+
 
 %build
+%if %{with build_from_sources}
+mvn %{!?with_tests:"-Dmaven.test.skip=true"} package
+%endif
+
 
 %install
+# Jar
+mkdir -p %{buildroot}%{_libdir}/lsc
+%if %{with build_from_sources}
+install -m 0644 target/%{name}-%{version}.jar \
+  %{buildroot}%{_libdir}/lsc
+%else
+install -m 0644 %{SOURCE1} %{buildroot}%{_libdir}/lsc/
+mkdir scripts
+install -m 0644 %{SOURCE2} %{SOURCE3} %{SOURCE4} scripts/
+%endif
 
-# Create directories
-mkdir -p %{buildroot}/usr/%{_lib}/lsc
-mkdir -p %{buildroot}/var/lib/lsc
-
-# Copy files
-cp -a %{SOURCE0} %{buildroot}/usr/%{_lib}/lsc
-cp -a %{SOURCE1} %{buildroot}/var/lib/lsc
-cp -a %{SOURCE2} %{buildroot}/var/lib/lsc
-cp -a %{SOURCE3} %{buildroot}/var/lib/lsc
-
-
-
-
+# Scripts
+mkdir -p %{buildroot}%{_localstatedir}/lib/lsc
+install -m 0755 scripts/lsc-executable*.pl \
+  %{buildroot}%{_localstatedir}/lib/lsc
 
 
 %files
+%if %{with build_from_sources}
+%license LICENSE.txt
+%doc README.md doc/*
+%endif
 /usr/%{_lib}/lsc/lsc-executable-plugin*
 /var/lib/lsc/lsc-executable*
+
 
 %changelog
 * Mon Jul 21 2025 - Clement Oudot <clem@lsc-project.org> - 1.3-1
