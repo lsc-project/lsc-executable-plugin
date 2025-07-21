@@ -8,15 +8,13 @@
 # Copyright (c) 2009 - 2021 LSC Project
 #=================================================
 
-%define lsc_executable_name	lsc-executable-plugin
-%define lsc_executable_version	1.3
 %define lsc_min_version		2.2
 %define lsc_user		lsc
 %define lsc_group		lsc
 
 Summary: LSC Executable plugin
-Name: %{lsc_executable_name}
-Version: %{lsc_executable_version}
+Name: lsc-executable-plugin
+Version: 1.3
 Release: 1%{?dist}
 License: BSD
 BuildArch: noarch
