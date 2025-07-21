@@ -12,13 +12,11 @@
 %define lsc_user		lsc
 %define lsc_group		lsc
 
-Summary: LSC Executable plugin
 Name: lsc-executable-plugin
 Version: 1.3
 Release: 1%{?dist}
+Summary: LSC Executable plugin
 License: BSD-3-Clause
-BuildArch: noarch
-
 URL: https://lsc-project.org
 
 Source: %{lsc_executable_name}-%{lsc_executable_version}.jar
@@ -26,7 +24,7 @@ Source1: lsc-executable-add-modify-delete-modrdn.pl
 Source2: lsc-executable-csv2ldif-get.pl
 Source3: lsc-executable-csv2ldif-list.pl
 
-Requires(pre): coreutils
+BuildArch: noarch
 Requires: lsc >= %{lsc_min_version}
 
 %description
