@@ -1,3 +1,12 @@
+lsc-executable-plugin (1.4-1) unstable; urgency=low
+
+  * Upgrade to 1.4
+  * Clean deb/rpm recipe
+  * Properly handle Base64-encoded attributes
+  * Compatibility with LSC 2.3
+
+ -- David Coutadeur (LSC-project) <david.coutadeur@gmail.com>  Mon, 27 Jul 2026 12:00:00 +0100
+
 lsc-executable-plugin (1.3-1) unstable; urgency=low
 
   * Upgrade to 1.3

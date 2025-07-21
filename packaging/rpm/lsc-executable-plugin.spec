@@ -7,85 +7,65 @@
 #
 # Copyright (c) 2009 - 2021 LSC Project
 #=================================================
+%global lsc_min_version		2.3
 
-#=================================================
-# Variables
-#=================================================
-%define lsc_executable_name	lsc-executable-plugin
-%define lsc_executable_version	1.3
-%define lsc_min_version		2.2
-%define lsc_user		lsc
-%define lsc_group		lsc
-
-#=================================================
-# Header
-#=================================================
-Summary: LSC Executable plugin
-Name: %{lsc_executable_name}
-Version: %{lsc_executable_version}
+Name: lsc-executable-plugin
+Version: 1.4
 Release: 1%{?dist}
-License: BSD
-BuildArch: noarch
-
-Group: Applications/System
+Summary: LSC Executable plugin
+License: BSD-3-Clause
 URL: https://lsc-project.org
-
-Source: %{lsc_executable_name}-%{lsc_executable_version}.jar
+Source0: lsc-executable-plugin-1.4.jar
 Source1: lsc-executable-add-modify-delete-modrdn.pl
 Source2: lsc-executable-csv2ldif-get.pl
 Source3: lsc-executable-csv2ldif-list.pl
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-Requires(pre): coreutils
+BuildArch: noarch
+BuildRequires: coreutils
+BuildRequires: perl-generators
 Requires: lsc >= %{lsc_min_version}
 
+
 %description
-This is an Executable plugin for LSC
+This is an Executable plugin for LSC.
+
 
 %prep
 
-%build
 
 %install
 
-rm -rf %{buildroot}
-
 # Create directories
 mkdir -p %{buildroot}/usr/%{_lib}/lsc
-mkdir -p %{buildroot}/var/lib/lsc
+mkdir -p %{buildroot}%{_docdir}/%{name}/scripts
 
 # Copy files
-cp -a %{SOURCE0} %{buildroot}/usr/%{_lib}/lsc
-cp -a %{SOURCE1} %{buildroot}/var/lib/lsc
-cp -a %{SOURCE2} %{buildroot}/var/lib/lsc
-cp -a %{SOURCE3} %{buildroot}/var/lib/lsc
+cp -a %{SOURCE0} %{buildroot}%{_libdir}/lsc
+cp -a %{SOURCE1} %{buildroot}%{_docdir}/%{name}/scripts/
+cp -a %{SOURCE2} %{buildroot}%{_docdir}/%{name}/scripts/
+cp -a %{SOURCE3} %{buildroot}%{_docdir}/%{name}/scripts/
 
-%post
-
-/bin/chown -R %{lsc_user}:%{lsc_group} /usr/%{_lib}/lsc 
-/bin/chown -R %{lsc_user}:%{lsc_group} /var/lib/lsc 
-
-
-%postun
-
-%clean
-rm -rf %{buildroot}
 
 %files
-%defattr(-, root, root, 0755)
-/usr/%{_lib}/lsc/lsc-executable-plugin*
-/var/lib/lsc/lsc-executable*
+%{_libdir}/lsc/lsc-executable-plugin*
+%doc %{_docdir}/%{name}/scripts
 
-#=================================================
-# Changelog
-#=================================================
+
 %changelog
+* Mon Jul 27 2026 David Coutadeur <david.coutadeur@gmail.com> - 1.4-1
+- Upgrade to 1.4
+- Clean rpm specfile
+- Properly handle Base64-encoded attributes
+- Compatibility with LSC 2.3
+
 * Mon Jul 21 2025 - Clement Oudot <clem@lsc-project.org> - 1.3-1
 - Upgrade to 1.3
 - fix value comparison + add unit test for executableLdifDestinationService task
+
 * Mon Apr 14 2025 - Clement Oudot <clem@lsc-project.org> - 1.2-1
 - Upgrade to 1.2
+
 * Thu Jan 07 2021 - Clement Oudot <clem@lsc-project.org> - 1.1-0
 - Upgrade to 1.1
+
 * Tue Mar 04 2014 - Clement Oudot <clem@lsc-project.org> - 1.0-0
 - First package for LSC Executable plugin
