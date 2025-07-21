@@ -12,7 +12,7 @@
 
 Name: lsc-executable-plugin
 Version: 1.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: LSC Executable plugin
 License: BSD-3-Clause
 URL: https://lsc-project.org
@@ -58,6 +58,9 @@ install -m 0755 scripts/lsc-executable*.pl \
 
 
 %changelog
+* Mon Jul 21 2025 Xavier Bachelot <xavier.bachelot@worteks.com> - 1.3-2
+- Rework specfile
+
 * Mon Jul 21 2025 - Clement Oudot <clem@lsc-project.org> - 1.3-1
 - Upgrade to 1.3
 - fix value comparison + add unit test for executableLdifDestinationService task
