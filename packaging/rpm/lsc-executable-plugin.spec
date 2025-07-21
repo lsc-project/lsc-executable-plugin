@@ -78,8 +78,8 @@ install -m 0755 scripts/lsc-executable*.pl \
 %license LICENSE.txt
 %doc README.md doc/*
 %endif
-/usr/%{_lib}/lsc/lsc-executable-plugin*
-/var/lib/lsc/lsc-executable*
+%{_libdir}/lsc/lsc-executable-plugin*
+%{_localstatedir}/lib/lsc/lsc-executable*.pl
 
 
 %changelog
