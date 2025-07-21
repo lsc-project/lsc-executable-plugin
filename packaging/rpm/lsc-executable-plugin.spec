@@ -22,6 +22,7 @@ BuildRequires: maven
 BuildRequires: java-devel >= 1:1.6.0
 BuildRequires: javapackages-local
 BuildRequires: jpackage-utils
+BuildRequires: perl-generators
 Requires: lsc >= %{lsc_min_version}
 
 
