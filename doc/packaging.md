@@ -27,6 +27,7 @@ cp -a packaging/debian target/
 
 Then create package:
 ```
+cd target/
 dpkg-buildpackage -b -kLSC
 ```
 
