@@ -1,3 +1,10 @@
+lsc-executable-plugin (1.3-1) unstable; urgency=low
+
+  * Upgrade to 1.3
+  * fix value comparison + add unit test for executableLdifDestinationService task
+
+ -- Clement Oudot (LSC-project) <clem.oudot@gmail.com>  Mon, 21 Jul 2025 12:00:00 +0100
+
 lsc-executable-plugin (1.2-1) unstable; urgency=low
 
   * Upgrade to 1.2

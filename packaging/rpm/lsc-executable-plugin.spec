@@ -12,7 +12,7 @@
 # Variables
 #=================================================
 %define lsc_executable_name	lsc-executable-plugin
-%define lsc_executable_version	1.2
+%define lsc_executable_version	1.3
 %define lsc_min_version		2.2
 %define lsc_user		lsc
 %define lsc_group		lsc
@@ -80,6 +80,9 @@ rm -rf %{buildroot}
 # Changelog
 #=================================================
 %changelog
+* Mon Jul 21 2025 - Clement Oudot <clem@lsc-project.org> - 1.3-1
+- Upgrade to 1.3
+- fix value comparison + add unit test for executableLdifDestinationService task
 * Mon Apr 14 2025 - Clement Oudot <clem@lsc-project.org> - 1.2-1
 - Upgrade to 1.2
 * Thu Jan 07 2021 - Clement Oudot <clem@lsc-project.org> - 1.1-0

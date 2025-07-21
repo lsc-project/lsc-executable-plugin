@@ -5,7 +5,7 @@
 	<groupId>org.lsc.plugins.connectors</groupId>
 	<artifactId>executable</artifactId>
 	<name>LDAP Synchronization Connector Executable connector</name>
-	<version>1.3-SNAPSHOT</version>
+	<version>1.3</version>
 	<description>
 	This project provides a Executable source / destination plugin for LSC
 	</description>
