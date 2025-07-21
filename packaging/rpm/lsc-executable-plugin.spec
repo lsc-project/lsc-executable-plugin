@@ -16,37 +16,37 @@ Release: 1%{?dist}
 Summary: LSC Executable plugin
 License: BSD-3-Clause
 URL: https://lsc-project.org
-
-Source: %{lsc_executable_name}-%{lsc_executable_version}.jar
-Source1: lsc-executable-add-modify-delete-modrdn.pl
-Source2: lsc-executable-csv2ldif-get.pl
-Source3: lsc-executable-csv2ldif-list.pl
-
+Source0: https://github.com/lsc-project/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildArch: noarch
+BuildRequires: maven
+BuildRequires: java-devel >= 1:1.6.0
+BuildRequires: javapackages-local
+BuildRequires: jpackage-utils
 Requires: lsc >= %{lsc_min_version}
+
 
 %description
 This is an Executable plugin for LSC.
 
+
 %prep
+%setup -q
+
 
 %build
+mvn package
+
 
 %install
+# Jar
+mkdir -p %{buildroot}%{_libdir}/lsc
+install -m 0644 target/%{name}-%{version}.jar \
+  %{buildroot}%{_libdir}/lsc
 
-# Create directories
-mkdir -p %{buildroot}/usr/%{_lib}/lsc
-mkdir -p %{buildroot}/var/lib/lsc
-
-# Copy files
-cp -a %{SOURCE0} %{buildroot}/usr/%{_lib}/lsc
-cp -a %{SOURCE1} %{buildroot}/var/lib/lsc
-cp -a %{SOURCE2} %{buildroot}/var/lib/lsc
-cp -a %{SOURCE3} %{buildroot}/var/lib/lsc
-
-
-
-
+# Scripts
+mkdir -p %{buildroot}%{_localstatedir}/lib/lsc
+install -m 0755 scripts/lsc-executable*.pl \
+  %{buildroot}%{_localstatedir}/lib/lsc
 
 
 %files
