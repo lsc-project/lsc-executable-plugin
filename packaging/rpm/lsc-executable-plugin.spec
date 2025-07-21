@@ -8,6 +8,7 @@
 # Copyright (c) 2009 - 2021 LSC Project
 #=================================================
 %global lsc_min_version		2.2
+%bcond_without tests
 
 Name: lsc-executable-plugin
 Version: 1.3
@@ -33,7 +34,7 @@ This is an Executable plugin for LSC.
 
 
 %build
-mvn package
+mvn %{!?with_tests:"-Dmaven.test.skip=true"} package
 
 
 %install
