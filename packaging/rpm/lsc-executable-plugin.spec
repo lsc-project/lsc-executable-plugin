@@ -30,7 +30,7 @@ Requires(pre): coreutils
 Requires: lsc >= %{lsc_min_version}
 
 %description
-This is an Executable plugin for LSC
+This is an Executable plugin for LSC.
 
 %prep
 
