@@ -8,18 +8,12 @@
 # Copyright (c) 2009 - 2021 LSC Project
 #=================================================
 
-#=================================================
-# Variables
-#=================================================
 %define lsc_executable_name	lsc-executable-plugin
 %define lsc_executable_version	1.3
 %define lsc_min_version		2.2
 %define lsc_user		lsc
 %define lsc_group		lsc
 
-#=================================================
-# Header
-#=================================================
 Summary: LSC Executable plugin
 Name: %{lsc_executable_name}
 Version: %{lsc_executable_version}
@@ -71,9 +65,6 @@ cp -a %{SOURCE3} %{buildroot}/var/lib/lsc
 /usr/%{_lib}/lsc/lsc-executable-plugin*
 /var/lib/lsc/lsc-executable*
 
-#=================================================
-# Changelog
-#=================================================
 %changelog
 * Mon Jul 21 2025 - Clement Oudot <clem@lsc-project.org> - 1.3-1
 - Upgrade to 1.3
