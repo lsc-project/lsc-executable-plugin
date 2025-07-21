@@ -28,7 +28,7 @@ Script
 
 There is one script for all operations (ADD, REMOVE, UPDATE and RENAME).
 
-```
+```xml
   <exec:addScript>/var/lib/lsc/lsc-executable-add-modify-delete-modrdn.pl</exec:addScript>
   <exec:updateScript>/var/lib/lsc/lsc-executable-add-modify-delete-modrdn.pl</exec:updateScript>
   <exec:removeScript>/var/lib/lsc/lsc-executable-add-modify-delete-modrdn.pl</exec:removeScript>
@@ -45,7 +45,7 @@ Hacking
 
 By default, the script does nothing:
 
-```
+```perl
     if ( $entry->changetype() eq "add" ) {
     }
     if ( $entry->changetype() eq "modify" ) {

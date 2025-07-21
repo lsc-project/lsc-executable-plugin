@@ -24,7 +24,7 @@ Scripts
 
 Declare each needed script in Executable service section:
 
-```
+```xml
   <exec:listScript>/var/lib/lsc/list.sh</exec:listScript>
   <exec:getScript>/var/lib/lsc/get.sh</exec:getScript>
   <exec:addScript>/var/lib/lsc/add.sh</exec:addScript>
@@ -38,7 +38,7 @@ Variables
 
 Use plugin service variables to declare the LDAP parameters:
 
-```
+```xml
   <exec:variables>
     <entry><key>LDAP_BIND_DN</key><value>cn=Directory Manager</value></entry>
     <entry><key>LDAP_BIND_PW</key><value>secret</value></entry>

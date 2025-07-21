@@ -40,7 +40,7 @@ LIST
 
 Nothing is given on STDIN by LSC. The script must send to STDOUT the list of entries under this format:
 
-```
+```ldif
 dn: entry1 identifier
 pivot1: aaa
 
@@ -55,14 +55,14 @@ GET
 
 For each entry found, LSC call the GET script with all the pivot attributes and their values on STDIN, under this format:
 
-```
+```ldif
 pivot1: aaa
 pivot2: xxx
 ```
 
 The script must find the corresponding entry and return the full entry on STDOUT, under this format:
 
-```
+```ldif
 dn: entry identifier
 attribute1: aaa
 attribute2: abc
@@ -76,7 +76,7 @@ ADD
 
 LSC will send on STDIN the LDIF of an entry to add, with changetype `add`:
 
-```
+```ldif
 dn: DN
 changetype: add
 attribute1: aaa
@@ -93,7 +93,7 @@ UPDATE
 
 LSC will send on STDIN the LDIF of an entry to modify, with changetype `modify`:
 
-```
+```ldif
 dn: DN
 changetype: modify
 replace: attribute1
@@ -112,7 +112,7 @@ REMOVE
 
 LSC will send on STDIN the LDIF of an entry to delete, with changetype `delete`:
 
-```
+```ldif
 dn: DN
 changetype: delete
 ```
@@ -126,7 +126,7 @@ RENAME
 
 LSC will send on STDIN the LDIF of an entry to rename, with changetype `modrdn`:
 
-```
+```ldif
 dn: DN
 changetype: modrdn
 newrdn: attribute1=aaa

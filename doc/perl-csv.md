@@ -26,7 +26,7 @@ List script
 
 Declare list script in the plugin service:
 
-```
+```xml
   <exec:listScript>/var/lib/lsc/lsc-executable-csv2ldif-list.pl</exec:listScript>
 ```
 
@@ -35,7 +35,7 @@ Get script
 
 Declare get script in the plugin service:
 
-```
+```xml
   <exec:getScript>/var/lib/lsc/lsc-executable-csv2ldif-get.pl</exec:getScript>
 ```
 
@@ -44,7 +44,7 @@ Variables
 
 Use plugin services variables to declare the CSV parameters:
 
-```
+```xml
   <exec:variables>
     <entry><key>CSV_FILE</key><value>/tmp/sample.csv</value></entry>
     <entry><key>CSV_DELIMITER</key><value>;</value></entry>
