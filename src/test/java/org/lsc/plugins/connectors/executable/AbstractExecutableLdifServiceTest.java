@@ -64,7 +64,8 @@ public class AbstractExecutableLdifServiceTest extends TestCase {
 				+ " main\n"
 				+ "singleAttribute: singleValue\n"
 				+ "multiAttribute: firstValue\n"
-				+ "multiAttribute: secondValue\n";
+				+ "multiAttribute: secondValue\n"
+				+ "encodedAttribute:: 5rGJ6K+t\n";
 		Collection<IBean> entries = executableLdifService.fromLdif(ldif);
 		
 		assertEquals(1, entries.size());
@@ -78,6 +79,8 @@ public class AbstractExecutableLdifServiceTest extends TestCase {
 		String[] multiValues = { "firstValue", "secondValue" } ;
 		HashSet<String> multiValuesSet = new HashSet<String>(Arrays.asList(multiValues));
 		assertEquals(multiValuesSet, entry.getDatasetById("multiAttribute"));
+		assertEquals("\u6C49\u8BED", entry.getDatasetFirstValueById("encodedAttribute"));
+
 	}
 	
 	private class TestExecutableLdifService extends AbstractExecutableLdifService {

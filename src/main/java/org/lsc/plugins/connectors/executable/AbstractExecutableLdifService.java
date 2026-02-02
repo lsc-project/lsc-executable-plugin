@@ -252,7 +252,7 @@ public abstract class AbstractExecutableLdifService implements IService {
 				String attributeId = attribute.getId().toLowerCase();
 				HashSet<Object> values = new HashSet<Object>();
 				for (Value value: attribute) {
-					values.add(value.toString());
+					values.add(value.getString());
 				}
 				bean.setDataset(attributeId, values);
 			}
@@ -283,4 +283,3 @@ public abstract class AbstractExecutableLdifService implements IService {
         return list;
     }
 }
-
