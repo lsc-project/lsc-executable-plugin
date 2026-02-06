@@ -117,7 +117,7 @@ public abstract class AbstractExecutableLdifService implements IService {
                 for (String parameter : runtime) {
                     parametersStr.append(parameter).append(" ");
                 }
-                LOGGER.debug("Lauching '{}'", parametersStr.toString());
+                LOGGER.debug("Launching '{}'", parametersStr.toString());
             }
             if(interpretor != null && interpretor == InterpretorType.CYGWIN) {
                 List<String> cygwinRuntime = new ArrayList<String>();
@@ -283,3 +283,4 @@ public abstract class AbstractExecutableLdifService implements IService {
         return list;
     }
 }
+
