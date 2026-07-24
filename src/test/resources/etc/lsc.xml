@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<lsc xmlns="http://lsc-project.org/XSD/lsc-core-2.2.xsd" xmlns:exec="http://lsc-project.org/XSD/lsc-executable-plugin-1.0.xsd"
+<lsc xmlns="http://lsc-project.org/XSD/lsc-core-2.3.xsd" xmlns:exec="http://lsc-project.org/XSD/lsc-executable-plugin-1.0.xsd"
 	revision="0">
 
 	<connections>
@@ -68,9 +68,9 @@
 					<string>telephoneNumber</string>
 					<string>seeAlso</string>
 				</fetchedAttributes>
-				<getAllFilter>(&amp;(sn=*))</getAllFilter>
-				<getOneFilter>(sn={sn})</getOneFilter>
-				<cleanFilter>(sn={sn})</cleanFilter>
+				<allEntriesFilter>"(&amp;(sn=*))"</allEntriesFilter>
+				<oneEntryFilter>"(sn=" + pivotAttributes["sn"] + ")"</oneEntryFilter>
+				<cleanEntryFilter>"(sn=" + pivotAttributes["sn"] + ")"</cleanEntryFilter>
 				<serverType>OpenDS</serverType>
 			</asyncLdapSourceService>
 			<pluginDestinationService
@@ -95,8 +95,8 @@
 						<string>telephoneNumber</string>
 						<string>seeAlso</string>
 					</fetchedAttributes>
-					<getAllFilter>(objectClass=person)</getAllFilter>
-					<getOneFilter>(&amp;(objectClass=person)(sn={sn}))</getOneFilter>
+					<allEntriesFilter>"(objectClass=person)"</allEntriesFilter>
+					<oneEntryFilter>"(&amp;(objectClass=person)(sn=" + pivotAttributes["sn"] + "))"</oneEntryFilter>
 <!-- 					<exec:interpretor>CYGWIN</exec:interpretor>
 					<exec:interpretorBinary>c:/cygwin/bin/bash.exe</exec:interpretorBinary>
  -->					<exec:addScript>src/test/resources/org/lsc/plugins/connectors/executable/add.sh</exec:addScript>
@@ -220,8 +220,8 @@
 						<string>telephoneNumber</string>
 						<string>seeAlso</string>
 					</fetchedAttributes>
-					<getAllFilter>(objectClass=person)</getAllFilter>
-					<getOneFilter>(&amp;(objectClass=person)(sn={sn}))</getOneFilter>
+					<allEntriesFilter>"(objectClass=person)"</allEntriesFilter>
+					<oneEntryFilter>"(&amp;(objectClass=person)(sn=" + pivotAttributes["sn"] + "))"</oneEntryFilter>
 					<exec:addScript>src/test/resources/org/lsc/plugins/connectors/executable/add.sh</exec:addScript>
 					<exec:updateScript>src/test/resources/org/lsc/plugins/connectors/executable/update.sh</exec:updateScript>
 					<exec:removeScript>src/test/resources/org/lsc/plugins/connectors/executable/delete.sh</exec:removeScript>
@@ -255,9 +255,9 @@
 					<string>sn</string>
 					<string>uid</string>
 				</fetchedAttributes>
-				<getAllFilter>(&amp;(uid=*))</getAllFilter>
-				<getOneFilter>(uid={uid})</getOneFilter>
-				<cleanFilter>(uid={uid})</cleanFilter>
+				<allEntriesFilter>"(&amp;(uid=*))"</allEntriesFilter>
+				<oneEntryFilter>"(uid=" + pivotAttributes["uid"] + ")"</oneEntryFilter>
+				<cleanEntryFilter>"(uid=" + pivotAttributes["uid"] + ")"</cleanEntryFilter>
 				<serverType>OpenDS</serverType>
 			</asyncLdapSourceService>
 			<pluginDestinationService implementationClass="org.lsc.plugins.connectors.executable.ExecutableLdifDestinationService">

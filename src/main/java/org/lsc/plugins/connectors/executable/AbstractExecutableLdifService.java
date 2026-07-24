@@ -25,6 +25,7 @@ import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.api.ldap.model.ldif.LdifEntry;
 import org.apache.directory.api.ldap.model.ldif.LdifReader;
 import org.lsc.LscDatasets;
+import org.lsc.Task;
 import org.lsc.beans.IBean;
 import org.lsc.configuration.ConnectionType;
 import org.lsc.exception.LscServiceException;
@@ -62,7 +63,7 @@ public abstract class AbstractExecutableLdifService implements IService {
      * @return The bean, or null if not found
      * @throws LscServiceException May throw a {@link LscServiceException} if there is any error with LDIF conversion
      */
-    public IBean getBean(String pivotName, LscDatasets pivotAttributes, boolean fromSameService) throws LscServiceException {
+    public IBean getBean(Task task, String pivotName, LscDatasets pivotAttributes, boolean fromSameService) throws LscServiceException {
         String output = executeWithReturn(getParameters(getScript, pivotName), getEnv(), toLdif(pivotAttributes));
         Collection<IBean> entries = fromLdif(output);
         if (entries.size() != 1) {
@@ -79,7 +80,7 @@ public abstract class AbstractExecutableLdifService implements IService {
      *         attribute names and values (never null)
      * @throws LscServiceException 
      */
-    public Map<String, LscDatasets> getListPivots() throws LscServiceException  {
+    public Map<String, LscDatasets> getListPivots(Task task) throws LscServiceException  {
         Map<String, LscDatasets> map = null;
         String output = executeWithReturn(getParameters(listScript), getEnv(), "");
         Collection<IBean> beans = fromLdif(output);

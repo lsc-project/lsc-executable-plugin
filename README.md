@@ -111,8 +111,8 @@ The configuration part of the destination service is:
       <string>sn</string>
       <string>uid</string>
     </fetchedAttributes>
-    <getAllFilter><![CDATA[(objectClass=inetOrgPerson)]]></getAllFilter>
-    <getOneFilter><![CDATA[(&(objectClass=inetOrgPerson)(uid={uid}))]]></getOneFilter>
+    <allEntriesFilter><![CDATA["(objectClass=inetOrgPerson)"]]></allEntriesFilter>
+    <oneEntryFilter><![CDATA["(&(objectClass=inetOrgPerson)(uid=" + pivotAttributes["uid"] + "))"]]></oneEntryFilter>
     <exec:addScript>path/to/addscript</exec:addScript>
     <exec:updateScript>path/to/updatescript</exec:updateScript>
     <exec:removeScript>path/to/removescript</exec:removeScript>
