@@ -59,6 +59,7 @@ import javax.naming.NamingException;
 
 import org.lsc.LscDatasets;
 import org.lsc.LscModifications;
+import org.lsc.Task;
 import org.lsc.beans.IBean;
 import org.lsc.configuration.ConnectionType;
 import org.lsc.configuration.KeysValuesMap.Entry;
@@ -154,8 +155,8 @@ public class ExecutableLdapDestinationService extends AbstractExecutableLdifServ
 	 *             directory, or if more than one object would be returned.
 	 */
 	@Override
-	public IBean getBean(String pivotName, LscDatasets pivotAttributes, boolean fromSameService) throws LscServiceException {
-		return sjds.getBean(pivotName, pivotAttributes, fromSameService);
+	public IBean getBean(Task task, String pivotName, LscDatasets pivotAttributes, boolean fromSameService) throws LscServiceException {
+		return sjds.getBean(task, pivotName, pivotAttributes, fromSameService);
 	}
 
     /**
@@ -166,8 +167,8 @@ public class ExecutableLdapDestinationService extends AbstractExecutableLdifServ
      * @throws LscServiceException 
      */
     @Override
-	public Map<String, LscDatasets> getListPivots() throws LscServiceException {
-		return sjds.getListPivots();
+	public Map<String, LscDatasets> getListPivots(Task task) throws LscServiceException {
+		return sjds.getListPivots(task);
 	}
 	
     @Override

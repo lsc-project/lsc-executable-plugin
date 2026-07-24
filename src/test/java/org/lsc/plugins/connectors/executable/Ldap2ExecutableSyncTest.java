@@ -61,10 +61,12 @@ import junit.framework.TestCase;
 import org.junit.BeforeClass;
 import org.lsc.LscDatasets;
 import org.lsc.SimpleSynchronize;
+import org.lsc.Task;
 import org.lsc.beans.IBean;
 import org.lsc.configuration.JaxbXmlConfigurationHelper;
 import org.lsc.configuration.LdapConnectionType;
 import org.lsc.configuration.LscConfiguration;
+import org.lsc.configuration.TaskType;
 import org.lsc.exception.LscConfigurationException;
 import org.lsc.exception.LscServiceException;
 import org.lsc.jndi.JndiServices;
@@ -131,7 +133,13 @@ public class Ldap2ExecutableSyncTest extends TestCase {
 
 		IService srcService = new SimpleJndiSrcService(LscConfiguration.getTask(TASK_NAME));
 		Entry<String, LscDatasets> obj = ids.entrySet().iterator().next();
-		IBean srcBean = srcService.getBean(obj.getKey(), obj.getValue(), true);
+		// Ininitialize the task
+		TaskType taskType = LscConfiguration.getTask(TASK_NAME);
+		Task task = null;
+		if (taskType != null) {
+			task = new Task(taskType);
+		}
+		IBean srcBean = srcService.getBean(task, obj.getKey(), obj.getValue(), true);
 		String userPassword = srcBean.getDatasetFirstValueById("userPassword");
 
 		// OpenDS automatically hashes the password using seeded SHA,
