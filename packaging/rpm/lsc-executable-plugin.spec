@@ -35,7 +35,6 @@ BuildRequires: java-devel >= 1:21
 BuildRequires: maven
 BuildRequires: maven-local
 %endif
-BuildRequires: perl-generators
 Requires: lsc >= %{lsc_min_version}
 
 
@@ -67,19 +66,14 @@ mkdir scripts
 install -m 0644 %{SOURCE2} %{SOURCE3} %{SOURCE4} scripts/
 %endif
 
-# Scripts
-mkdir -p %{buildroot}%{_localstatedir}/lib/lsc
-install -m 0755 scripts/lsc-executable*.pl \
-  %{buildroot}%{_localstatedir}/lib/lsc
-
 
 %files
 %if %{with build_from_sources}
 %license LICENSE.txt
 %doc README.md doc/*
 %endif
+%doc scripts/*
 %{_libdir}/lsc/lsc-executable-plugin*
-%{_localstatedir}/lib/lsc/lsc-executable*.pl
 
 
 %changelog
