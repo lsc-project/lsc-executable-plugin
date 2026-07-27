@@ -7,14 +7,14 @@
 #
 # Copyright (c) 2009 - 2021 LSC Project
 #=================================================
-%global lsc_min_version		2.2
+%global lsc_min_version		2.3
 
 %bcond build_from_sources 0
 %bcond tests              0
 
 Name: lsc-executable-plugin
-Version: 1.3
-Release: 2%{?dist}
+Version: 1.4
+Release: 1%{?dist}
 Summary: LSC Executable plugin
 License: BSD-3-Clause
 URL: https://lsc-project.org
@@ -77,6 +77,12 @@ install -m 0644 %{SOURCE2} %{SOURCE3} %{SOURCE4} scripts/
 
 
 %changelog
+* Mon Jul 27 2026 Xavier Bachelot <xavier.bachelot@worteks.com> - 1.4-1
+- Update to 1.4
+  - Properly handle Base64-encoded attributes
+  - Compatibility with LSC 2.3
+- Clean rpm specfile
+
 * Mon Jul 21 2025 Xavier Bachelot <xavier.bachelot@worteks.com> - 1.3-2
 - Rework specfile
 
