@@ -9,8 +9,8 @@
 #=================================================
 %global lsc_min_version		2.3
 
-%bcond build_from_sources 0
-%bcond tests              0
+%bcond_with build_from_sources
+%bcond_with tests
 
 Name: lsc-executable-plugin
 Version: 1.4
