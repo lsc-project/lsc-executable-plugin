@@ -1,2 +1,1 @@
 lsc-executable-plugin*.jar usr/lib/lsc
-../scripts/* var/lib/lsc

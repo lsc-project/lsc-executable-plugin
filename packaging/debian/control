@@ -10,5 +10,5 @@ Vcs-Browser: https://github.com/lsc-project/lsc-executable-plugin
 
 Package: lsc-executable-plugin
 Architecture: all
-Depends: ${misc:Depends}, lsc (>= 2.2)
-Description: This is an Executable plugin for LSC
+Depends: ${misc:Depends}, lsc (>= 2.3)
+Description: This is an Executable plugin for LSC.
